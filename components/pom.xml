@@ -33,7 +33,7 @@
         <!--<module>components-hadoopcluster</module>-->
 
         <!-- Slow-building components are built last. -->
-        <module>components-salesforce</module>
+        <!--<module>components-salesforce</module>-->
         <!--<module>components-snowflake</module>-->
     </modules>
 </project>

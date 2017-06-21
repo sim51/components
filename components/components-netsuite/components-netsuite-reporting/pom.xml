@@ -61,6 +61,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <dataFileIncludes>${project.build.directory}/jacoco.exec</dataFileIncludes>
+                    <append>true</append>
+                </configuration>
             </plugin>
         </plugins>
     </build>

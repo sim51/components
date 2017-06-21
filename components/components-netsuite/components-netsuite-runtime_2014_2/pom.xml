@@ -134,6 +134,8 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
+                    <dataFile>${project.basedir}/../components-netsuite-reporting/target/jacoco.exec</dataFile>
+                    <append>true</append>
                     <excludes>
                         <exclude>com/netsuite/webservices/**/*</exclude>
                     </excludes>

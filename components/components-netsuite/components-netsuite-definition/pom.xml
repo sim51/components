@@ -122,6 +122,14 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <dataFile>${project.basedir}/../components-netsuite-reporting/target/jacoco.exec</dataFile>
+                    <append>true</append>
+                </configuration>
+            </plugin>
+            <plugin>
                 <!-- This plugin is used to generate .link files used for the OSGI test
                     execution with PaxExam -->
                 <groupId>com.github.veithen.alta</groupId>
