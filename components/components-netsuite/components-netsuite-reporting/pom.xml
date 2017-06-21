@@ -57,48 +57,59 @@
                             <fileSets>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-definition/target</directory>
-                                    <includes><include>*.exec</include></includes>
+                                    <includes><include>jacoco.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
-                                    <includes><include>*.exec</include></includes>
+                                    <includes><include>jacoco.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
-                                    <includes><include>*.exec</include></includes>
+                                    <includes><include>jacoco.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
-                                    <includes><include>*.exec</include></includes>
+                                    <includes><include>jacoco.exec</include></includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>merge-ut</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-definition/target</directory>
+                                    <includes><include>jacoco-it.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
+                                    <includes><include>jacoco-it.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
+                                    <includes><include>jacoco-it.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
+                                    <includes><include>jacoco-it.exec</include></includes>
                                 </fileSet>
                             </fileSets>
                             <destFile>${project.build.directory}/jacoco-it.exec</destFile>
                         </configuration>
                     </execution>
                     <!--<execution>-->
-                        <!--<id>merge-it</id>-->
-                        <!--<phase>process-test-resources</phase>-->
+                        <!--<id>jacoco-site-aggregate</id>-->
+                        <!--<phase>prepare-package</phase>-->
                         <!--<goals>-->
-                            <!--<goal>merge</goal>-->
+                            <!--<goal>report-aggregate</goal>-->
                         <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<fileSets>-->
-                                <!--<fileSet>-->
-                                    <!--<includes>-->
-                                        <!--<include>${project.basedir}/../**/jacoco-it.exec</include>-->
-                                    <!--</includes>-->
-                                <!--</fileSet>-->
-                            <!--</fileSets>-->
-                            <!--<destFile>${project.build.directory}/jacoco-it.exec</destFile>-->
-                        <!--</configuration>-->
                     <!--</execution>-->
-                    <execution>
-                        <id>jacoco-site-aggregate</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
