@@ -57,52 +57,52 @@
                             <fileSets>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-definition/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                             </fileSets>
                             <destFile>${project.build.directory}/jacoco.exec</destFile>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>merge-it</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.basedir}/../components-netsuite-definition/target</directory>
-                                    <includes><include>jacoco-it.exec</include></includes>
-                                </fileSet>
-                                <fileSet>
-                                    <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
-                                    <includes><include>jacoco-it.exec</include></includes>
-                                </fileSet>
-                                <fileSet>
-                                    <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
-                                    <includes><include>jacoco-it.exec</include></includes>
-                                </fileSet>
-                                <fileSet>
-                                    <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
-                                    <includes><include>jacoco-it.exec</include></includes>
-                                </fileSet>
-                            </fileSets>
-                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
-                        </configuration>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>merge-it</id>-->
+                        <!--<phase>process-test-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>merge</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<fileSets>-->
+                                <!--<fileSet>-->
+                                    <!--<directory>${project.basedir}/../components-netsuite-definition/target</directory>-->
+                                    <!--<includes><include>jacoco-it.exec</include></includes>-->
+                                <!--</fileSet>-->
+                                <!--<fileSet>-->
+                                    <!--<directory>${project.basedir}/../components-netsuite-runtime/target</directory>-->
+                                    <!--<includes><include>jacoco-it.exec</include></includes>-->
+                                <!--</fileSet>-->
+                                <!--<fileSet>-->
+                                    <!--<directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>-->
+                                    <!--<includes><include>jacoco-it.exec</include></includes>-->
+                                <!--</fileSet>-->
+                                <!--<fileSet>-->
+                                    <!--<directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>-->
+                                    <!--<includes><include>jacoco-it.exec</include></includes>-->
+                                <!--</fileSet>-->
+                            <!--</fileSets>-->
+                            <!--<destFile>${project.build.directory}/jacoco-it.exec</destFile>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                     <execution>
                         <id>default-report</id>
                         <phase>prepare-package</phase>
@@ -111,10 +111,10 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>${project.basedir}/../components-netsuite-definition/target/classes/**/*.class</include>
-                                <include>${project.basedir}/../components-netsuite-runtime/target/classes/**/*.class</include>
-                                <include>${project.basedir}/../components-netsuite-runtime_2014_2/target/classes/**/*.class</include>
-                                <include>${project.basedir}/../components-netsuite-runtime_2016_2/target/classes/**/*.class</include>
+                                <include>${project.basedir}/../components-netsuite-definition/target/classes/**/*</include>
+                                <include>${project.basedir}/../components-netsuite-runtime/target/classes/**/*</include>
+                                <include>${project.basedir}/../components-netsuite-runtime_2014_2/target/classes/**/*</include>
+                                <include>${project.basedir}/../components-netsuite-runtime_2016_2/target/classes/**/*</include>
                             </includes>
                         </configuration>
                     </execution>
