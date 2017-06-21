@@ -57,22 +57,22 @@
                             <fileSets>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-definition/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                                 <fileSet>
                                     <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
-                                    <includes><include>jacoco.exec</include></includes>
+                                    <includes><include>*.exec</include></includes>
                                 </fileSet>
                             </fileSets>
-                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
                         </configuration>
                     </execution>
                     <!--<execution>-->
