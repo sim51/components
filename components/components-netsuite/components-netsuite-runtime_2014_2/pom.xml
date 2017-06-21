@@ -133,28 +133,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>prepare-agent-ut</id>-->
-                        <!--<goals>-->
-                            <!--<goal>prepare-agent</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<destFile>${project.basedir}/../target/jacoco.exec</destFile>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>prepare-agent-it</id>-->
-                        <!--<goals>-->
-                            <!--<goal>prepare-agent-integration</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<destFile>${project.basedir}/../target/jacoco-it.exec</destFile>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
                 <configuration>
-                    <append>true</append>
                     <excludes>
                         <exclude>com/netsuite/webservices/**/*</exclude>
                     </excludes>
@@ -240,7 +219,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>-Xms512m -Xmx1024m</argLine>
+                    <argLine>-Xms512m -Xmx1024m ${argLine}</argLine>
                     <systemPropertyVariables>
                         <pax.exam.karaf.version>4.0.2</pax.exam.karaf.version>
                         <netsuite.endpoint.url>${netsuite.endpoint.2014_2.url}</netsuite.endpoint.url>

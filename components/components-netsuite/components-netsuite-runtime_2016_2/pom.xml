@@ -244,7 +244,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>-Xms512m -Xmx1024m</argLine>
+                    <argLine>-Xms512m -Xmx1024m ${argLine}</argLine>
                     <systemPropertyVariables>
                         <pax.exam.karaf.version>4.0.2</pax.exam.karaf.version>
                         <netsuite.endpoint.url>${netsuite.endpoint.2016_2.url}</netsuite.endpoint.url>
