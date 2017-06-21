@@ -111,10 +111,6 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <dataFile>${project.basedir}/../components-netsuite-reporting/target/jacoco.exec</dataFile>
-                    <append>true</append>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

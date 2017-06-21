@@ -48,11 +48,50 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>jacoco-initialize</id>
+                        <id>merge-ut</id>
+                        <phase>process-test-resources</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>merge</goal>
                         </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-definition/target</directory>
+                                    <includes><include>jacoco.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime/target</directory>
+                                    <includes><include>jacoco.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime_2014_2/target</directory>
+                                    <includes><include>jacoco.exec</include></includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../components-netsuite-runtime_2016_2/target</directory>
+                                    <includes><include>jacoco.exec</include></includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        </configuration>
                     </execution>
+                    <!--<execution>-->
+                        <!--<id>merge-it</id>-->
+                        <!--<phase>process-test-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>merge</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<fileSets>-->
+                                <!--<fileSet>-->
+                                    <!--<includes>-->
+                                        <!--<include>${project.basedir}/../**/jacoco-it.exec</include>-->
+                                    <!--</includes>-->
+                                <!--</fileSet>-->
+                            <!--</fileSets>-->
+                            <!--<destFile>${project.build.directory}/jacoco-it.exec</destFile>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                     <execution>
                         <id>jacoco-site-aggregate</id>
                         <phase>prepare-package</phase>
@@ -61,10 +100,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <dataFileIncludes>${project.build.directory}/jacoco.exec</dataFileIncludes>
-                    <append>true</append>
-                </configuration>
             </plugin>
         </plugins>
     </build>
