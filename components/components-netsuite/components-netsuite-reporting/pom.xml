@@ -103,6 +103,21 @@
                             <destFile>${project.build.directory}/jacoco-it.exec</destFile>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>${project.basedir}/../components-netsuite-definition/target/classes/**/*.class</include>
+                                <include>${project.basedir}/../components-netsuite-runtime/target/classes/**/*.class</include>
+                                <include>${project.basedir}/../components-netsuite-runtime_2014_2/target/classes/**/*.class</include>
+                                <include>${project.basedir}/../components-netsuite-runtime_2016_2/target/classes/**/*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
                     <!--<execution>-->
                         <!--<id>jacoco-site-aggregate</id>-->
                         <!--<phase>prepare-package</phase>-->
