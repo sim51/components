@@ -76,7 +76,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>merge-ut</id>
+                        <id>merge-it</id>
                         <phase>process-test-resources</phase>
                         <goals>
                             <goal>merge</goal>
