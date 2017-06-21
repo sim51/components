@@ -28,6 +28,7 @@ import org.talend.components.azurestorage.RuntimeContainerMock;
 import org.talend.components.azurestorage.blob.helpers.FileMaskTable;
 import org.talend.components.azurestorage.blob.tazurestorageput.TAzureStoragePutProperties;
 import org.talend.components.azurestorage.tazurestorageconnection.TAzureStorageConnectionProperties;
+import org.talend.components.azurestorage.tazurestorageconnection.TAzureStorageConnectionProperties.Protocol;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.ValidationResult;
@@ -53,6 +54,7 @@ public class AzureStoragePutRuntimeTest {
         properties.setupProperties();
         // valid connection
         properties.connection = new TAzureStorageConnectionProperties(PROP_ + "Connection");
+        properties.connection.protocol.setValue(Protocol.HTTP);
         properties.connection.accountName.setValue("fakeAccountName");
         properties.connection.accountKey.setValue("fakeAccountKey=ANBHFYRJJFHRIKKJFU");
         properties.container.setValue("goog-container-name-1");

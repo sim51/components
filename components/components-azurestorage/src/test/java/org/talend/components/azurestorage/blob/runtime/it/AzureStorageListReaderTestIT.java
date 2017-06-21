@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.azurestorage.blob.runtime;
+package org.talend.components.azurestorage.blob.runtime.it;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

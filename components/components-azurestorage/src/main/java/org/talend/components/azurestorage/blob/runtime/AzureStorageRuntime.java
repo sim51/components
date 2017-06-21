@@ -2,11 +2,16 @@ package org.talend.components.azurestorage.blob.runtime;
 
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.talend.components.api.component.runtime.RuntimableRuntime;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.properties.ComponentProperties;
+import org.talend.components.azurestorage.AzureConnection;
+import org.talend.components.azurestorage.AzureConnectionWithKeyService;
+import org.talend.components.azurestorage.AzureConnectionWithSasService;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
 import org.talend.components.azurestorage.tazurestorageconnection.TAzureStorageConnectionProperties;
 import org.talend.components.azurestorage.utils.SharedAccessSignatureUtils;
@@ -31,6 +36,8 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
 
     private static final I18nMessages messages = GlobalI18N.getI18nMessageProvider().getI18nMessages(AzureStorageRuntime.class);
 
+    private static final String SAS_PATTERN = "(http.?)?://(.*)\\.(blob|file|queue|table)\\.core\\.windows\\.net\\/(.*)";
+
     @Override
     public ValidationResult initialize(RuntimeContainer runtimeContainer, ComponentProperties properties) {
         // init
@@ -44,9 +51,16 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
 
             errorMessage = messages.getMessage("error.VacantConnection"); //$NON-NLS-1$
 
-        } else if (conn.useSharedAccessSignature.getValue() && StringUtils.isEmpty(conn.sharedAccessSignature.getStringValue())) { // checks
-                                                                                                                                   // SAS
-            errorMessage = messages.getMessage("error.EmptySAS"); //$NON-NLS-1$
+        } else if (conn.useSharedAccessSignature.getValue()) { // checks
+            if (StringUtils.isEmpty(conn.sharedAccessSignature.getStringValue())) {
+                errorMessage = messages.getMessage("error.EmptySAS"); //$NON-NLS-1$
+            } else {
+                Matcher m = Pattern.compile(SAS_PATTERN).matcher(conn.sharedAccessSignature.getValue());
+                if (!m.matches()) {
+                    errorMessage = messages.getMessage("error.InvalidSAS");
+                }
+            }
+
         } else if (!conn.useSharedAccessSignature.getValue() && (StringUtils.isEmpty(conn.accountName.getStringValue())
                 || StringUtils.isEmpty(conn.accountKey.getStringValue()))) { // checks connection's account and key
 
@@ -112,6 +126,29 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
         }
 
         return account;
+    }
+
+    public AzureConnection getAzureConnection(RuntimeContainer runtimeContainer) {
+
+        TAzureStorageConnectionProperties conn = getUsedConnection(runtimeContainer);
+        if (conn.useSharedAccessSignature.getValue()) {
+            // extract account name and sas token from sas url
+            Matcher m = Pattern.compile(SAS_PATTERN).matcher(conn.sharedAccessSignature.getValue());
+            m.matches();
+
+            return AzureConnectionWithSasService.builder()//
+                    .accountName(m.group(2))//
+                    .sasToken(m.group(4))//
+                    .build();
+
+        } else {
+
+            return AzureConnectionWithKeyService.builder()//
+                    .protocol(conn.protocol.getValue().toString().toLowerCase())//
+                    .accountName(conn.accountName.getValue())//
+                    .accountKey(conn.accountKey.getValue()).build();
+        }
+
     }
 
     /**

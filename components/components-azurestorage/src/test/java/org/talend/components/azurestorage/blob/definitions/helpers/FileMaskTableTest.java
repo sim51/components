@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.azurestorage.blob.helpers;
+package org.talend.components.azurestorage.blob.definitions.helpers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.components.azurestorage.blob.helpers.FileMaskTable;
 
 public class FileMaskTableTest {
 
