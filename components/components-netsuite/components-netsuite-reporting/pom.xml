@@ -44,6 +44,57 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.talend.components</groupId>
+                                    <artifactId>components-netsuite-definition</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <!--<outputDirectory>${project.build.directory}/jacoco-report-classes</outputDirectory>-->
+                                    <!--<includes>org/talend/components/netsuite/**/*.class</includes>-->
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.talend.components</groupId>
+                                    <artifactId>components-netsuite-runtime</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <!--<outputDirectory>${project.build.directory}/jacoco-report-classes</outputDirectory>-->
+                                    <!--<includes>org/talend/components/netsuite/**/*.class</includes>-->
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.talend.components</groupId>
+                                    <artifactId>components-netsuite-runtime_2014_2</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <!--<outputDirectory>${project.build.directory}/jacoco-report-classes</outputDirectory>-->
+                                    <!--<includes>org/talend/components/netsuite/**/*.class</includes>-->
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.talend.components</groupId>
+                                    <artifactId>components-netsuite-runtime_2016_2</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <!--<outputDirectory>${project.build.directory}/jacoco-report-classes</outputDirectory>-->
+                                    <!--<includes>org/talend/components/netsuite/**/*.class</includes>-->
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <includes>org/talend/components/netsuite/**/*.class</includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
@@ -103,21 +154,18 @@
                             <!--<destFile>${project.build.directory}/jacoco-it.exec</destFile>-->
                         <!--</configuration>-->
                     <!--</execution>-->
-                    <execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>${project.basedir}/../components-netsuite-definition/target/classes/**/*</include>
-                                <include>${project.basedir}/../components-netsuite-runtime/target/classes/**/*</include>
-                                <include>${project.basedir}/../components-netsuite-runtime_2014_2/target/classes/**/*</include>
-                                <include>${project.basedir}/../components-netsuite-runtime_2016_2/target/classes/**/*</include>
-                            </includes>
-                        </configuration>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>default-report</id>-->
+                        <!--<phase>prepare-package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>report</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<includes>-->
+                                <!--<include>${project.build.directory}/jacoco-classes/**/*.class</include>-->
+                            <!--</includes>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                     <!--<execution>-->
                         <!--<id>jacoco-site-aggregate</id>-->
                         <!--<phase>prepare-package</phase>-->
