@@ -17,6 +17,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -84,17 +86,15 @@ public class AzureStorageListReaderTest {
 
     @Test
     public void testStartAsNonStartable() {
-        // prepare test data and mocks
         try {
 
-            when(blobService.listBlobs(properties.container.getValue(), "dummyFilter", true))
-                    .thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
-                        @Override
-                        public Iterator<ListBlobItem> iterator() {
-                            return new DummyListBlobItemIterator(new ArrayList<CloudBlockBlob>());
-                        }
-                    });
+                @Override
+                public Iterator<ListBlobItem> iterator() {
+                    return new DummyListBlobItemIterator(new ArrayList<CloudBlockBlob>());
+                }
+            });
 
             properties.remoteBlobs = new RemoteBlobsTable("RemoteBlobsTable");
             properties.remoteBlobs.include.setValue(Arrays.asList(true));
@@ -117,14 +117,13 @@ public class AzureStorageListReaderTest {
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob1.txt")));
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob2.txt")));
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob3.txt")));
-            when(blobService.listBlobs(properties.container.getValue(), "someFilter", true))
-                    .thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
-                        @Override
-                        public Iterator<ListBlobItem> iterator() {
-                            return new DummyListBlobItemIterator(list);
-                        }
-                    });
+                @Override
+                public Iterator<ListBlobItem> iterator() {
+                    return new DummyListBlobItemIterator(list);
+                }
+            });
 
             properties.remoteBlobs = new RemoteBlobsTable("RemoteBlobsTable");
             properties.remoteBlobs.include.setValue(Arrays.asList(true));
@@ -156,14 +155,13 @@ public class AzureStorageListReaderTest {
             final List<CloudBlockBlob> list = new ArrayList<>();
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob1.txt")));
 
-            when(blobService.listBlobs(properties.container.getValue(), "someFilter", true))
-                    .thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
-                        @Override
-                        public Iterator<ListBlobItem> iterator() {
-                            return new DummyListBlobItemIterator(list);
-                        }
-                    });
+                @Override
+                public Iterator<ListBlobItem> iterator() {
+                    return new DummyListBlobItemIterator(list);
+                }
+            });
 
             properties.remoteBlobs = new RemoteBlobsTable("RemoteBlobsTable");
             properties.remoteBlobs.include.setValue(Arrays.asList(true));

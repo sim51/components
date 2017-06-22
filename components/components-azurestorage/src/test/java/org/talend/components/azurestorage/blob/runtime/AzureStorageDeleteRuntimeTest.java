@@ -14,6 +14,9 @@ package org.talend.components.azurestorage.blob.runtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
@@ -101,7 +104,7 @@ public class AzureStorageDeleteRuntimeTest {
             final List<CloudBlockBlob> list = new ArrayList<>();
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob1.txt")));
 
-            when(blobService.listBlobs(properties.container.getValue(), "block1", true)).thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
                 @Override
                 public Iterator<ListBlobItem> iterator() {
@@ -109,7 +112,7 @@ public class AzureStorageDeleteRuntimeTest {
                 }
             });
 
-            when(blobService.deleteBlobBlockIfExist(list.get(0))).thenReturn(false);
+            when(blobService.deleteBlobBlockIfExist(any(CloudBlockBlob.class))).thenReturn(false);
             deleteBlock.runAtDriver(runtimeContainer);
 
         } catch (StorageException | URISyntaxException | InvalidKeyException e) {
@@ -128,7 +131,7 @@ public class AzureStorageDeleteRuntimeTest {
             final List<CloudBlockBlob> list = new ArrayList<>();
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob1.txt")));
 
-            when(blobService.listBlobs(properties.container.getValue(), "block1", true)).thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
                 @Override
                 public Iterator<ListBlobItem> iterator() {
@@ -136,7 +139,7 @@ public class AzureStorageDeleteRuntimeTest {
                 }
             });
 
-            when(blobService.deleteBlobBlockIfExist(list.get(0))).thenReturn(true);
+            when(blobService.deleteBlobBlockIfExist(any(CloudBlockBlob.class))).thenReturn(true);
 
             deleteBlock.runAtDriver(runtimeContainer);
         } catch (StorageException | URISyntaxException | InvalidKeyException e) {
@@ -154,7 +157,7 @@ public class AzureStorageDeleteRuntimeTest {
         deleteBlock.azureStorageBlobService = blobService;
 
         try {
-            when(blobService.listBlobs(properties.container.getValue(), "block1", true))
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean()))
                     .thenThrow(new StorageException("some error code", "dummy message", new RuntimeException()));
             deleteBlock.runAtDriver(runtimeContainer);
 
@@ -173,7 +176,7 @@ public class AzureStorageDeleteRuntimeTest {
         deleteBlock.azureStorageBlobService = blobService;
         // prepare test data and mocks
         try {
-            when(blobService.listBlobs(properties.container.getValue(), "block1", true))
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean()))
                     .thenThrow(new StorageException("some error code", "dummy message", new RuntimeException()));
             deleteBlock.runAtDriver(runtimeContainer);
         } catch (InvalidKeyException | URISyntaxException | StorageException e) {

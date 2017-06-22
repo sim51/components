@@ -15,11 +15,15 @@ package org.talend.components.azurestorage.blob.runtime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -51,6 +55,7 @@ import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.ValidationResult;
 
 import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.CloudBlob;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.azure.storage.blob.ListBlobItem;
 
@@ -120,32 +125,23 @@ public class AzureStorageGetRuntimeTest {
 
     @Test
     public void testRunAtDriverValid() {
-        properties.remoteBlobsGet = new RemoteBlobsGetTable("RemoteBlobsGetTable");
-        properties.remoteBlobsGet.include.setValue(Arrays.asList(true));
-        properties.remoteBlobsGet.prefix.setValue(Arrays.asList("block1"));
-        properties.remoteBlobsGet.create.setValue(Arrays.asList(false));
         String localFolderPath = null;
         try {
+
             localFolderPath = FileUtils.createTempDirectory().getAbsolutePath();
+
+            properties.remoteBlobsGet = new RemoteBlobsGetTable("RemoteBlobsGetTable");
+            properties.remoteBlobsGet.include.setValue(Arrays.asList(true));
+            properties.remoteBlobsGet.prefix.setValue(Arrays.asList("block1"));
+            properties.remoteBlobsGet.create.setValue(Arrays.asList(false));
             properties.localFolder.setValue(localFolderPath);
-        } catch (IOException e) {
-            fail("should not throw " + e.getMessage());
-        }
 
-        ValidationResult validationResult = storageGet.initialize(runtimeContainer, properties);
-        assertEquals(ValidationResult.OK.getStatus(), validationResult.getStatus());
+            ValidationResult validationResult = storageGet.initialize(runtimeContainer, properties);
+            assertEquals(ValidationResult.OK.getStatus(), validationResult.getStatus());
 
-        // prepare test data and mocks
-        final List<CloudBlockBlob> list = new ArrayList<>();
-        try {
+            final List<CloudBlockBlob> list = new ArrayList<>();
             list.add(new CloudBlockBlob(new URI("https://storagesample.blob.core.windows.net/mycontainer/blob1.txt")));
-        } catch (StorageException | URISyntaxException e) {
-            fail("should not throw " + e.getMessage());
-        }
-
-        try {
-
-            when(blobService.listBlobs(properties.container.getValue(), "block1", true)).thenReturn(new Iterable<ListBlobItem>() {
+            when(blobService.listBlobs(anyString(), anyString(), anyBoolean())).thenReturn(new Iterable<ListBlobItem>() {
 
                 @Override
                 public Iterator<ListBlobItem> iterator() {
@@ -159,16 +155,17 @@ public class AzureStorageGetRuntimeTest {
                 public Void answer(InvocationOnMock invocation) throws Throwable {
                     return null;
                 }
-            }).when(blobService).download(list.get(0), null);
+            }).when(blobService).download(any(CloudBlob.class), any(OutputStream.class));
+            storageGet.azureStorageBlobService = blobService;
+            storageGet.runAtDriver(runtimeContainer);
 
-        } catch (InvalidKeyException | URISyntaxException | StorageException e) {
+        } catch (StorageException | URISyntaxException | InvalidKeyException | IOException e) {
             fail("should not throw " + e.getMessage());
+        } finally {
+            if (localFolderPath != null) {
+                Files.delete(new File(localFolderPath));
+            }
         }
-
-        storageGet.azureStorageBlobService = blobService;
-        storageGet.runAtDriver(runtimeContainer);
-
-        Files.delete(new File(localFolderPath));
 
     }
 

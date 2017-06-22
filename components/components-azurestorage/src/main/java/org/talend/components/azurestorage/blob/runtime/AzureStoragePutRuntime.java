@@ -61,7 +61,7 @@ public class AzureStoragePutRuntime extends AzureStorageContainerRuntime
 
     private FileMaskTable files;
 
-    private AzureStorageBlobService azureStorageBlobService;
+    public AzureStorageBlobService azureStorageBlobService;
 
     @Override
     public ValidationResult initialize(RuntimeContainer runtimeContainer, ComponentProperties properties) {

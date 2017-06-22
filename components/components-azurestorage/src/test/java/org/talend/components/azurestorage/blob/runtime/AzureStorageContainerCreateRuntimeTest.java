@@ -14,6 +14,7 @@ package org.talend.components.azurestorage.blob.runtime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -134,7 +135,7 @@ public class AzureStorageContainerCreateRuntimeTest {
 
         try {
 
-            when(blobService.createContainerIfNotExist(properties.container.getValue()))
+            when(blobService.createContainerIfNotExist(anyString()))
                     .thenThrow(new StorageException("errorCode", "storage exception message", new RuntimeException()));
             containerCreate.runAtDriver(runtimeContainer);
 
@@ -157,7 +158,7 @@ public class AzureStorageContainerCreateRuntimeTest {
         containerCreate.blobService = blobService;
 
         try {
-            when(blobService.createContainerIfNotExist(properties.container.getValue()))
+            when(blobService.createContainerIfNotExist(anyString()))
                     .thenThrow(new URISyntaxException("bad url", "some reason"));
             containerCreate.runAtDriver(runtimeContainer);
 
@@ -177,7 +178,7 @@ public class AzureStorageContainerCreateRuntimeTest {
         containerCreate.blobService = blobService;
 
         try {
-            when(blobService.createContainerIfNotExist(properties.container.getValue()))
+            when(blobService.createContainerIfNotExist(anyString()))
                     .thenThrow(new StorageException("errorCode", "storage exception message", new RuntimeException()));
             containerCreate.runAtDriver(runtimeContainer);
 
@@ -195,14 +196,14 @@ public class AzureStorageContainerCreateRuntimeTest {
         assertEquals(ValidationResult.OK.getStatus(), validationResult.getStatus());
 
         try {
-            when(blobService.createContainerIfNotExist(properties.container.getValue())).thenReturn(true);
+            when(blobService.createContainerIfNotExist(anyString())).thenReturn(true);
             doAnswer(new Answer<Void>() {
 
                 @Override
                 public Void answer(InvocationOnMock invocation) throws Throwable {
                     return null;
                 }
-            }).when(blobService).setPublicAccess(properties.container.getValue());
+            }).when(blobService).setPublicAccess(anyString());
 
             containerCreate.blobService = blobService;
             containerCreate.runAtDriver(runtimeContainer);
@@ -220,14 +221,14 @@ public class AzureStorageContainerCreateRuntimeTest {
         assertEquals(ValidationResult.OK.getStatus(), validationResult.getStatus());
 
         try {
-            when(blobService.createContainerIfNotExist(properties.container.getValue())).thenReturn(false);
+            when(blobService.createContainerIfNotExist(anyString())).thenReturn(false);
             doAnswer(new Answer<Void>() {
 
                 @Override
                 public Void answer(InvocationOnMock invocation) throws Throwable {
                     return null;
                 }
-            }).when(blobService).setPublicAccess(properties.container.getValue());
+            }).when(blobService).setPublicAccess(anyString());
 
             containerCreate.blobService = blobService;
             containerCreate.runAtDriver(runtimeContainer);
