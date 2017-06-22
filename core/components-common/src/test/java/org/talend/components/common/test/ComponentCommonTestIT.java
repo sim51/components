@@ -30,8 +30,8 @@ public class ComponentCommonTestIT extends ProxyPropertiesTest {
     @Configuration
     public Option[] config() {
 
-        return null; //options(composite(ComponentsPaxExamOptions.getOptions()), //
-                //linkBundle("org.talend.components-components-common"));
+        return options(composite(ComponentsPaxExamOptions.getOptions()), //
+                linkBundle("org.talend.components-components-common"));
     }
 
 }

@@ -45,7 +45,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>archetype-resources/__componentNameLowerCase__-definition/pom.xml</include>
-					<include>archetype-resources/__componentNameLowerCase__-runtime/pom.xml</include>
+					<include>archetype-resources/__componentNameLowerCase__-runtime__runtimeVersionConverted__/pom.xml</include>
 				</includes>
 			</resource>
 			<resource>
