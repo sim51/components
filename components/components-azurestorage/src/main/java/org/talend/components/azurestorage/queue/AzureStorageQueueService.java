@@ -114,4 +114,10 @@ public class AzureStorageQueueService {
         queueRef.deleteMessage(message);
     }
 
+    public Iterable<CloudQueue> listQueues() throws InvalidKeyException, URISyntaxException {
+
+        CloudQueueClient client = connection.getCloudStorageAccount().createCloudQueueClient();
+        return client.listQueues();
+    }
+
 }
