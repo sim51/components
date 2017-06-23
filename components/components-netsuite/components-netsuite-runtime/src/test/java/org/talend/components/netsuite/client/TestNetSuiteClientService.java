@@ -13,21 +13,50 @@
 
 package org.talend.components.netsuite.client;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.ws.BindingProvider;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.mockito.Mockito;
+import org.talend.components.netsuite.NetSuiteErrorCode;
 import org.talend.components.netsuite.client.model.BasicMetaData;
 import org.talend.components.netsuite.client.model.TestBasicMetaDataImpl;
 
 import com.netsuite.webservices.test.platform.NetSuitePortType;
 import com.netsuite.webservices.test.platform.core.BaseRef;
+import com.netsuite.webservices.test.platform.core.Passport;
 import com.netsuite.webservices.test.platform.core.Record;
+import com.netsuite.webservices.test.platform.core.RecordRef;
+import com.netsuite.webservices.test.platform.core.SearchRecord;
 import com.netsuite.webservices.test.platform.core.SearchResult;
 import com.netsuite.webservices.test.platform.core.Status;
 import com.netsuite.webservices.test.platform.core.StatusDetail;
+import com.netsuite.webservices.test.platform.messages.AddListRequest;
+import com.netsuite.webservices.test.platform.messages.AddRequest;
+import com.netsuite.webservices.test.platform.messages.ApplicationInfo;
+import com.netsuite.webservices.test.platform.messages.DeleteListRequest;
+import com.netsuite.webservices.test.platform.messages.DeleteRequest;
+import com.netsuite.webservices.test.platform.messages.GetListRequest;
+import com.netsuite.webservices.test.platform.messages.GetRequest;
+import com.netsuite.webservices.test.platform.messages.LogoutRequest;
+import com.netsuite.webservices.test.platform.messages.Preferences;
 import com.netsuite.webservices.test.platform.messages.ReadResponse;
 import com.netsuite.webservices.test.platform.messages.ReadResponseList;
+import com.netsuite.webservices.test.platform.messages.SearchMoreRequest;
+import com.netsuite.webservices.test.platform.messages.SearchMoreWithIdRequest;
+import com.netsuite.webservices.test.platform.messages.SearchNextRequest;
+import com.netsuite.webservices.test.platform.messages.SearchPreferences;
+import com.netsuite.webservices.test.platform.messages.SearchRequest;
+import com.netsuite.webservices.test.platform.messages.UpdateListRequest;
+import com.netsuite.webservices.test.platform.messages.UpdateRequest;
+import com.netsuite.webservices.test.platform.messages.UpsertListRequest;
+import com.netsuite.webservices.test.platform.messages.UpsertRequest;
 import com.netsuite.webservices.test.platform.messages.WriteResponse;
 import com.netsuite.webservices.test.platform.messages.WriteResponseList;
 
@@ -39,80 +68,20 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
     public static final String NS_URI_PLATFORM_MESSAGES =
             "urn:messages_2016_2.platform.webservices.netsuite.com";
 
+    protected NetSuitePortProvider<NetSuitePortType> portProvider = new NetSuitePortMockProvider();
+
     public TestNetSuiteClientService() {
         super();
 
         metaDataSource = createDefaultMetaDataSource();
     }
 
-    @Override
-    public <RecT, SearchT> NsSearchResult<RecT> search(SearchT searchRecord) throws NetSuiteException {
-        return null;
+    public NetSuitePortProvider<NetSuitePortType> getPortProvider() {
+        return portProvider;
     }
 
-    @Override
-    public <RecT> NsSearchResult<RecT> searchMore(int pageIndex) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT> NsSearchResult<RecT> searchMoreWithId(String searchId, int pageIndex) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT> NsSearchResult<RecT> searchNext() throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> NsReadResponse<RecT> get(RefT ref) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> List<NsReadResponse<RecT>> getList(List<RefT> refs) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> NsWriteResponse<RefT> add(RecT record) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> List<NsWriteResponse<RefT>> addList(List<RecT> records) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> NsWriteResponse<RefT> update(RecT record) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> List<NsWriteResponse<RefT>> updateList(List<RecT> records) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> NsWriteResponse<RefT> upsert(RecT record) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RecT, RefT> List<NsWriteResponse<RefT>> upsertList(List<RecT> records) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RefT> NsWriteResponse<RefT> delete(RefT ref) throws NetSuiteException {
-        return null;
-    }
-
-    @Override
-    public <RefT> List<NsWriteResponse<RefT>> deleteList(List<RefT> refs) throws NetSuiteException {
-        return null;
+    public void setPortProvider(NetSuitePortProvider<NetSuitePortType> portProvider) {
+        this.portProvider = portProvider;
     }
 
     @Override
@@ -127,11 +96,17 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
 
     @Override
     protected void doLogout() throws NetSuiteException {
-
+        try {
+            LogoutRequest request = new LogoutRequest();
+            port.logout(request);
+        } catch (Exception e) {
+            throw new NetSuiteException(e.getMessage(), e);
+        }
     }
 
     @Override
     protected void doLogin() throws NetSuiteException {
+        port = getNetSuitePort(endpointUrl, credentials.getAccount());
 
     }
 
@@ -151,28 +126,56 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
     }
 
     @Override
-    protected <T> T createNativePreferences(NsPreferences nsPreferences) {
-        return null;
+    protected Preferences createNativePreferences(NsPreferences nsPreferences) {
+        Preferences preferences = new Preferences();
+        try {
+            BeanUtils.copyProperties(preferences, nsPreferences);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new NetSuiteException(e.getMessage(), e);
+        }
+        return preferences;
     }
 
     @Override
-    protected <T> T createNativeSearchPreferences(NsSearchPreferences nsSearchPreferences) {
-        return null;
+    protected SearchPreferences createNativeSearchPreferences(NsSearchPreferences nsSearchPreferences) {
+        SearchPreferences searchPreferences = new SearchPreferences();
+        try {
+            BeanUtils.copyProperties(searchPreferences, nsSearchPreferences);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new NetSuiteException(e.getMessage(), e);
+        }
+        return searchPreferences;
     }
 
     @Override
-    protected <T> T createNativeApplicationInfo(NetSuiteCredentials nsCredentials) {
-        return null;
+    protected ApplicationInfo createNativeApplicationInfo(NetSuiteCredentials credentials) {
+        ApplicationInfo applicationInfo = new ApplicationInfo();
+        applicationInfo.setApplicationId(credentials.getApplicationId());
+        return applicationInfo;
     }
 
     @Override
-    protected <T> T createNativePassport(NetSuiteCredentials nsCredentials) {
-        return null;
+    protected Passport createNativePassport(NetSuiteCredentials nsCredentials) {
+        RecordRef roleRecord = new RecordRef();
+        roleRecord.setInternalId(nsCredentials.getRoleId());
+
+        final Passport passport = new Passport();
+        passport.setEmail(nsCredentials.getEmail());
+        passport.setPassword(nsCredentials.getPassword());
+        passport.setRole(roleRecord);
+        passport.setAccount(nsCredentials.getAccount());
+
+        return passport;
     }
 
     @Override
     protected NetSuitePortType getNetSuitePort(String defaultEndpointUrl, String account) throws NetSuiteException {
-        return null;
+        try {
+            return portProvider.getPort(new URL(defaultEndpointUrl), account);
+        } catch (MalformedURLException e) {
+            throw new NetSuiteException(new NetSuiteErrorCode(
+                    NetSuiteErrorCode.CLIENT_ERROR, "Malformed URL: " + defaultEndpointUrl), e);
+        }
     }
 
     public static <RefT> List<NsWriteResponse<RefT>> toNsWriteResponseList(WriteResponseList writeResponseList) {
@@ -260,5 +263,153 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
         nsDetail.setCode(detail.getCode().value());
         nsDetail.setMessage(detail.getMessage());
         return nsDetail;
+    }
+
+    public interface NetSuitePortProvider<T> {
+
+        T getPort(URL endpointUrl, String account);
+    }
+
+    public static class NetSuitePortMockProvider implements NetSuitePortProvider<NetSuitePortType> {
+
+        @Override
+        public NetSuitePortType getPort(URL endpointUrl, String account) {
+            return Mockito.mock(NetSuitePortType.class, Mockito.withSettings().extraInterfaces(BindingProvider.class));
+        }
+    }
+
+    protected class PortAdapterImpl implements PortAdapter<NetSuitePortType> {
+
+        @Override
+        public <RecT, SearchT> NsSearchResult<RecT> search(final NetSuitePortType port, final SearchT searchRecord) throws Exception {
+            SearchRequest request = new SearchRequest();
+            SearchRecord sr = (SearchRecord) searchRecord;
+            request.setSearchRecord(sr);
+
+            SearchResult result = port.search(request).getSearchResult();
+            return toNsSearchResult(result);
+        }
+
+        @Override
+        public <RecT> NsSearchResult<RecT> searchMore(final NetSuitePortType port, final int pageIndex) throws Exception {
+            SearchMoreRequest request = new SearchMoreRequest();
+            request.setPageIndex(pageIndex);
+
+            SearchResult result = port.searchMore(request).getSearchResult();
+            return toNsSearchResult(result);
+        }
+
+        @Override
+        public <RecT> NsSearchResult<RecT> searchMoreWithId(final NetSuitePortType port,
+                final String searchId, final int pageIndex) throws Exception {
+            SearchMoreWithIdRequest request = new SearchMoreWithIdRequest();
+            request.setSearchId(searchId);
+            request.setPageIndex(pageIndex);
+
+            SearchResult result = port.searchMoreWithId(request).getSearchResult();
+            return toNsSearchResult(result);
+        }
+
+        @Override
+        public <RecT> NsSearchResult<RecT> searchNext(final NetSuitePortType port) throws Exception {
+            SearchNextRequest request = new SearchNextRequest();
+            SearchResult result = port.searchNext(request).getSearchResult();
+            return toNsSearchResult(result);
+        }
+
+        @Override
+        public <RecT, RefT> NsReadResponse<RecT> get(final NetSuitePortType port, final RefT ref) throws Exception {
+            GetRequest request = new GetRequest();
+            request.setBaseRef((BaseRef) ref);
+
+            ReadResponse response = port.get(request).getReadResponse();
+            return toNsReadResponse(response);
+        }
+
+        @Override
+        public <RecT, RefT> List<NsReadResponse<RecT>> getList(final NetSuitePortType port, final List<RefT> refs) throws Exception {
+            GetListRequest request = new GetListRequest();
+            for (RefT ref : refs) {
+                request.getBaseRef().add((BaseRef) ref);
+            }
+
+            ReadResponseList response = port.getList(request).getReadResponseList();
+            return toNsReadResponseList(response);
+        }
+
+        @Override
+        public <RecT, RefT> NsWriteResponse<RefT> add(final NetSuitePortType port, final RecT record) throws Exception {
+            AddRequest request = new AddRequest();
+            request.setRecord((Record) record);
+
+            WriteResponse response = port.add(request).getWriteResponse();
+            return toNsWriteResponse(response);
+        }
+
+        @Override
+        public <RecT, RefT> List<NsWriteResponse<RefT>> addList(final NetSuitePortType port,
+                final List<RecT> records) throws Exception {
+            AddListRequest request = new AddListRequest();
+            request.getRecord().addAll(toRecordList(records));
+
+            WriteResponseList writeResponseList = port.addList(request).getWriteResponseList();
+            return toNsWriteResponseList(writeResponseList);
+        }
+
+        @Override
+        public <RecT, RefT> NsWriteResponse<RefT> update(final NetSuitePortType port, final RecT record) throws Exception {
+            UpdateRequest request = new UpdateRequest();
+            request.setRecord((Record) record);
+
+            WriteResponse response = port.update(request).getWriteResponse();
+            return toNsWriteResponse(response);
+        }
+
+        @Override
+        public <RecT, RefT> List<NsWriteResponse<RefT>> updateList(final NetSuitePortType port, final List<RecT> records) throws Exception {
+            UpdateListRequest request = new UpdateListRequest();
+            request.getRecord().addAll(toRecordList(records));
+
+            WriteResponseList writeResponseList = port.updateList(request).getWriteResponseList();
+            return toNsWriteResponseList(writeResponseList);
+        }
+
+        @Override
+        public <RecT, RefT> NsWriteResponse<RefT> upsert(final NetSuitePortType port, final RecT record) throws Exception {
+            UpsertRequest request = new UpsertRequest();
+            request.setRecord((Record) record);
+
+            WriteResponse response = port.upsert(request).getWriteResponse();
+            return toNsWriteResponse(response);
+        }
+
+        @Override
+        public <RecT, RefT> List<NsWriteResponse<RefT>> upsertList(final NetSuitePortType port, final List<RecT> records) throws Exception {
+            UpsertListRequest request = new UpsertListRequest();
+            request.getRecord().addAll(toRecordList(records));
+
+            WriteResponseList writeResponseList = port.upsertList(request).getWriteResponseList();
+            return toNsWriteResponseList(writeResponseList);
+        }
+
+        @Override
+        public <RefT> NsWriteResponse<RefT> delete(final NetSuitePortType port, final RefT ref) throws Exception {
+            DeleteRequest request = new DeleteRequest();
+            BaseRef baseRef = (BaseRef) ref;
+            request.setBaseRef(baseRef);
+
+            WriteResponse writeResponse = port.delete(request).getWriteResponse();
+            return toNsWriteResponse(writeResponse);
+        }
+
+        @Override
+        public <RefT> List<NsWriteResponse<RefT>> deleteList(final NetSuitePortType port, final List<RefT> refs) throws Exception {
+            DeleteListRequest request = new DeleteListRequest();
+            request.getBaseRef().addAll(toBaseRefList(refs));
+
+            WriteResponseList writeResponseList = port.deleteList(request).getWriteResponseList();
+            return toNsWriteResponseList(writeResponseList);
+        }
+
     }
 }
