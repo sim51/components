@@ -50,7 +50,7 @@ public class PythonRowDefinitionTest {
 
     /**
      * Check {@link PythonRowDefinition#getPropertyClass()} returns class, which canonical name is
-     * "org.talend.components.processing.pythonrow.PythonRowProperties"
+     * "org.talend.components.processing.definition.pythonrow.PythonRowProperties"
      */
     @Test
     public void testGetPropertyClass() {

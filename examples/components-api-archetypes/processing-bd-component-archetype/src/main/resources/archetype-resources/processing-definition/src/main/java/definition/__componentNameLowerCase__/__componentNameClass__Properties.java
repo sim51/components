@@ -22,7 +22,7 @@ import org.talend.daikon.properties.presentation.Form;
 public class ${componentNameClass}Properties extends FixedConnectorsComponentProperties{
 
     // input schema
-    public transient PropertyPathConnector MAIN_CONNECTOR = new PropertyPathConnector(Connector.MAIN_NAME, "main");
+    public transient PropertyPathConnector INPUT_CONNECTOR = new PropertyPathConnector(Connector.MAIN_NAME, "main");
 
     public SchemaProperties main=new SchemaProperties("main"){
         @SuppressWarnings("unused")
@@ -32,7 +32,7 @@ public class ${componentNameClass}Properties extends FixedConnectorsComponentPro
     };
 
     // output schema
-    public transient PropertyPathConnector FLOW_CONNECTOR = new PropertyPathConnector(Connector.MAIN_NAME, "schemaFlow");
+    public transient PropertyPathConnector OUTPUT_CONNECTOR = new PropertyPathConnector(Connector.MAIN_NAME, "schemaFlow");
 
     public SchemaProperties schemaFlow = new SchemaProperties("schemaFlow");
 
@@ -49,10 +49,10 @@ public class ${componentNameClass}Properties extends FixedConnectorsComponentPro
         HashSet<PropertyPathConnector> connectors = new HashSet<PropertyPathConnector>();
         if (isOutputConnection) {
             // output schemas
-            connectors.add(FLOW_CONNECTOR);
+            connectors.add(OUTPUT_CONNECTOR);
         } else {
             // input schema
-            connectors.add(MAIN_CONNECTOR);
+            connectors.add(INPUT_CONNECTOR);
         }
         return connectors;
     }

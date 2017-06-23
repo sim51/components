@@ -17,7 +17,7 @@ This document describes how to generate a new TCOMP processing component easily 
 
 In order to do it, you need to follow those steps :
 
-1. Go into the archetype folder `components/examples/components-api-archetypes/bd-archetype-processing`
+1. Go into the archetype folder `components/examples/components-api-archetypes/processing-bd-component-archetype`
 
 2. Use the command `mvn clean install` to install the archetype in local 
 

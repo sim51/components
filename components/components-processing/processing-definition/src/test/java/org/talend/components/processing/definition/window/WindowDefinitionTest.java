@@ -63,7 +63,7 @@ public class WindowDefinitionTest {
     public void testGetPropertyClass() {
         Class<?> propertyClass = definition.getPropertyClass();
         String canonicalName = propertyClass.getCanonicalName();
-        assertThat(canonicalName, equalTo("org.talend.components.processing.window.WindowProperties"));
+        assertThat(canonicalName, equalTo("org.talend.components.processing.definition.window.WindowProperties"));
     }
 
     @Test

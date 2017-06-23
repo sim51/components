@@ -62,6 +62,6 @@
     <modules>
         <module>input-component-archetype</module>
         <module>poc-bd-archetype</module>
-        <module>bd-archetype-processing</module>
+        <module>processing-bd-component-archetype</module>
     </modules>
 </project>

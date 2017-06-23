@@ -70,7 +70,7 @@ public class ReplicateDefinitionTest {
     public void testGetPropertyClass() {
         Class<?> propertyClass = definition.getPropertyClass();
         String canonicalName = propertyClass.getCanonicalName();
-        assertThat(canonicalName, equalTo("org.talend.components.processing.replicate.ReplicateProperties"));
+        assertThat(canonicalName, equalTo("org.talend.components.processing.definition.replicate.ReplicateProperties"));
     }
 
     @Test
