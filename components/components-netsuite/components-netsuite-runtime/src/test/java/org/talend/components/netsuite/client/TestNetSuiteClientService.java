@@ -15,20 +15,30 @@ package org.talend.components.netsuite.client;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.cxf.headers.Header;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.mockito.Mockito;
 import org.talend.components.netsuite.NetSuiteErrorCode;
+import org.talend.components.netsuite.NetSuiteRuntimeI18n;
 import org.talend.components.netsuite.client.model.BasicMetaData;
 import org.talend.components.netsuite.client.model.TestBasicMetaDataImpl;
 
+import com.netsuite.webservices.test.platform.InvalidCredentialsFault;
+import com.netsuite.webservices.test.platform.InvalidSessionFault;
 import com.netsuite.webservices.test.platform.NetSuitePortType;
+import com.netsuite.webservices.test.platform.UnexpectedErrorFault;
 import com.netsuite.webservices.test.platform.core.BaseRef;
 import com.netsuite.webservices.test.platform.core.Passport;
 import com.netsuite.webservices.test.platform.core.Record;
@@ -44,6 +54,8 @@ import com.netsuite.webservices.test.platform.messages.DeleteListRequest;
 import com.netsuite.webservices.test.platform.messages.DeleteRequest;
 import com.netsuite.webservices.test.platform.messages.GetListRequest;
 import com.netsuite.webservices.test.platform.messages.GetRequest;
+import com.netsuite.webservices.test.platform.messages.LoginRequest;
+import com.netsuite.webservices.test.platform.messages.LoginResponse;
 import com.netsuite.webservices.test.platform.messages.LogoutRequest;
 import com.netsuite.webservices.test.platform.messages.Preferences;
 import com.netsuite.webservices.test.platform.messages.ReadResponse;
@@ -53,6 +65,7 @@ import com.netsuite.webservices.test.platform.messages.SearchMoreWithIdRequest;
 import com.netsuite.webservices.test.platform.messages.SearchNextRequest;
 import com.netsuite.webservices.test.platform.messages.SearchPreferences;
 import com.netsuite.webservices.test.platform.messages.SearchRequest;
+import com.netsuite.webservices.test.platform.messages.SessionResponse;
 import com.netsuite.webservices.test.platform.messages.UpdateListRequest;
 import com.netsuite.webservices.test.platform.messages.UpdateRequest;
 import com.netsuite.webservices.test.platform.messages.UpsertListRequest;
@@ -72,6 +85,8 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
 
     public TestNetSuiteClientService() {
         super();
+
+        portAdapter = new PortAdapterImpl();
 
         metaDataSource = createDefaultMetaDataSource();
     }
@@ -108,15 +123,73 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
     protected void doLogin() throws NetSuiteException {
         port = getNetSuitePort(endpointUrl, credentials.getAccount());
 
+        setHttpClientPolicy(port);
+
+        setLoginHeaders(port);
+
+        PortOperation<SessionResponse, NetSuitePortType> loginOp;
+        if (!credentials.isUseSsoLogin()) {
+            final Passport passport = createNativePassport(credentials);
+            loginOp = new PortOperation<SessionResponse, NetSuitePortType>() {
+                @Override public SessionResponse execute(NetSuitePortType port) throws Exception {
+                    LoginRequest request = new LoginRequest();
+                    request.setPassport(passport);
+                    LoginResponse response = port.login(request);
+                    return response.getSessionResponse();
+                }
+            };
+        } else {
+            throw new NetSuiteException(new NetSuiteErrorCode(NetSuiteErrorCode.CLIENT_ERROR),
+                    NetSuiteRuntimeI18n.MESSAGES.getMessage("error.ssoLoginNotSupported"));
+        }
+
+        Status status = null;
+        SessionResponse sessionResponse;
+        String exceptionMessage = null;
+        for (int i = 0; i < getRetryCount(); i++) {
+            try {
+                sessionResponse = loginOp.execute(port);
+                status = sessionResponse.getStatus();
+
+            } catch (InvalidCredentialsFault f) {
+                throw new NetSuiteException(new NetSuiteErrorCode(NetSuiteErrorCode.CLIENT_ERROR),
+                        f.getFaultInfo().getMessage());
+            } catch (UnexpectedErrorFault f) {
+                exceptionMessage = f.getFaultInfo().getMessage();
+            } catch (Exception e) {
+                exceptionMessage = e.getMessage();
+            }
+
+            if (status != null) {
+                break;
+            }
+
+            if (i != getRetryCount() - 1) {
+                waitForRetryInterval();
+            }
+        }
+
+        checkLoginError(toNsStatus(status), exceptionMessage);
+
+        removeLoginHeaders(port);
     }
 
     @Override
     protected boolean errorCanBeWorkedAround(Throwable t) {
+        if (t instanceof InvalidSessionFault ||
+                t instanceof RemoteException ||
+                t instanceof SOAPFaultException ||
+                t instanceof SocketException)
+            return true;
+
         return false;
     }
 
     @Override
     protected boolean errorRequiresNewLogin(Throwable t) {
+        if (t instanceof InvalidSessionFault || t instanceof SocketException) {
+            return true;
+        }
         return false;
     }
 
@@ -176,6 +249,21 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
             throw new NetSuiteException(new NetSuiteErrorCode(
                     NetSuiteErrorCode.CLIENT_ERROR, "Malformed URL: " + defaultEndpointUrl), e);
         }
+    }
+
+    @Override
+    protected void setHeader(NetSuitePortType port, Header header) {
+        super.setHeader(port, header);
+    }
+
+    @Override
+    protected void removeHeader(QName name) {
+        super.removeHeader(name);
+    }
+
+    @Override
+    protected void setHttpClientPolicy(NetSuitePortType port, HTTPClientPolicy httpClientPolicy) {
+        // dp nothing
     }
 
     public static <RefT> List<NsWriteResponse<RefT>> toNsWriteResponseList(WriteResponseList writeResponseList) {
