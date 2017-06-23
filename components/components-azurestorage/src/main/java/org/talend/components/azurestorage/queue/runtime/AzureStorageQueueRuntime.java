@@ -27,7 +27,7 @@ public class AzureStorageQueueRuntime extends AzureStorageRuntime {
     private static final I18nMessages messages = GlobalI18N.getI18nMessageProvider()
             .getI18nMessages(AzureStorageQueueRuntime.class);
 
-    protected String QueueName;
+    protected String queueName;
 
     /**
      * getServiceClient.
@@ -64,7 +64,7 @@ public class AzureStorageQueueRuntime extends AzureStorageRuntime {
         // init
         AzureStorageQueueProperties componentProperties = (AzureStorageQueueProperties) properties;
 
-        this.QueueName = componentProperties.queueName.getValue();
+        this.queueName = componentProperties.queueName.getValue();
 
         // validate
         ValidationResult validationResult = super.initialize(runtimeContainer, properties);
@@ -73,20 +73,20 @@ public class AzureStorageQueueRuntime extends AzureStorageRuntime {
         }
 
         String errorMessage = "";
-        if (QueueName.isEmpty()) {
+        if (queueName.isEmpty()) {
             errorMessage = messages.getMessage("error.NameEmpty");
             return new ValidationResult(ValidationResult.Result.ERROR, errorMessage);
         }
-        if (QueueName.length() < 3 || QueueName.length() > 63) {
+        if (queueName.length() < 3 || queueName.length() > 63) {
             errorMessage = messages.getMessage("error.LengthError");
             return new ValidationResult(ValidationResult.Result.ERROR, errorMessage);
         }
-        if (QueueName.indexOf("--") > -1) {
+        if (queueName.indexOf("--") > -1) {
             errorMessage = messages.getMessage("error.TwoDashError");
             return new ValidationResult(ValidationResult.Result.ERROR, errorMessage);
         }
 
-        if (!queueCheckNamePattern.matcher(QueueName.replaceAll("-", "")).matches()) {
+        if (!queueCheckNamePattern.matcher(queueName.replaceAll("-", "")).matches()) {
             errorMessage = messages.getMessage("error.QueueNameError");
             return new ValidationResult(ValidationResult.Result.ERROR, errorMessage);
         }

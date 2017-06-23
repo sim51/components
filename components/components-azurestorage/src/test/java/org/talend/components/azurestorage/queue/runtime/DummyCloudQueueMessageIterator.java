@@ -12,6 +12,29 @@
 // ============================================================================
 package org.talend.components.azurestorage.queue.runtime;
 
-public class AzureStorageQueueInputLoopReaderTest {
+import java.util.Iterator;
+import java.util.List;
+
+import com.microsoft.azure.storage.queue.CloudQueueMessage;
+
+public class DummyCloudQueueMessageIterator implements Iterator<CloudQueueMessage> {
+
+    private Iterator<CloudQueueMessage> it;
+
+    public DummyCloudQueueMessageIterator(List<CloudQueueMessage> list) {
+        super();
+        this.it = list.iterator();
+    }
+
+    @Override
+    public boolean hasNext() {
+
+        return it.hasNext();
+    }
+
+    @Override
+    public CloudQueueMessage next() {
+        return it.next();
+    }
 
 }

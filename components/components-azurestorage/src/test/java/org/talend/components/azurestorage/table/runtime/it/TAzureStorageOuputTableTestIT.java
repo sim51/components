@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.azurestorage.table.runtime;
+package org.talend.components.azurestorage.table.runtime.it;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -40,6 +40,9 @@ import org.talend.components.api.component.runtime.BoundedReader;
 import org.talend.components.api.component.runtime.Writer;
 import org.talend.components.api.exception.ComponentException;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
+import org.talend.components.azurestorage.table.runtime.AzureStorageTableSink;
+import org.talend.components.azurestorage.table.runtime.AzureStorageTableSource;
+import org.talend.components.azurestorage.table.runtime.AzureStorageTableWriter;
 import org.talend.components.azurestorage.table.tazurestorageinputtable.TAzureStorageInputTableProperties;
 import org.talend.components.azurestorage.table.tazurestorageoutputtable.TAzureStorageOutputTableProperties;
 import org.talend.components.azurestorage.table.tazurestorageoutputtable.TAzureStorageOutputTableProperties.ActionOnData;

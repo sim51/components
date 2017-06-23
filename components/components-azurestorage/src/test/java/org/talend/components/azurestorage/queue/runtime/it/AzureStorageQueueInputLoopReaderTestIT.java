@@ -10,10 +10,12 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.azurestorage.queue.runtime;
+package org.talend.components.azurestorage.queue.runtime.it;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.talend.components.azurestorage.queue.runtime.AzureStorageQueueInputLoopReader;
+import org.talend.components.azurestorage.queue.runtime.AzureStorageQueueSource;
 import org.talend.components.azurestorage.queue.tazurestoragequeueinputloop.TAzureStorageQueueInputLoopProperties;
 
 @Ignore

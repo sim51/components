@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.azurestorage.table.runtime;
+package org.talend.components.azurestorage.table.runtime.it;
 
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -24,6 +24,8 @@ import org.talend.components.api.component.runtime.Writer;
 import org.talend.components.api.properties.ComponentProperties;
 import org.talend.components.azurestorage.AzureStorageBaseTestIT;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
+import org.talend.components.azurestorage.table.runtime.AzureStorageTableSink;
+import org.talend.components.azurestorage.table.runtime.AzureStorageTableSource;
 import org.talend.components.azurestorage.table.tazurestorageoutputtable.TAzureStorageOutputTableProperties;
 import org.talend.components.azurestorage.table.tazurestorageoutputtable.TAzureStorageOutputTableProperties.ActionOnTable;
 import org.talend.daikon.avro.AvroUtils;

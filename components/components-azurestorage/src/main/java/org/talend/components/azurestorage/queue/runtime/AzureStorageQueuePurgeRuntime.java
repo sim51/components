@@ -49,7 +49,7 @@ public class AzureStorageQueuePurgeRuntime extends AzureStorageQueueRuntime
     private boolean purgeAzureQueue(RuntimeContainer container) {
         Boolean purgeResult = false;
         try {
-            CloudQueue queue = getCloudQueue(container, QueueName);
+            CloudQueue queue = getCloudQueue(container, queueName);
             int dataCount = (int) queue.getApproximateMessageCount();
             LOGGER.debug(messages.getMessage("debug.Purgeing", dataCount, queue.getName()));
             queue.clear();
@@ -66,7 +66,7 @@ public class AzureStorageQueuePurgeRuntime extends AzureStorageQueueRuntime
         String componentId = container.getCurrentComponentId();
         String returnQueueName = AzureStorageUtils
                 .getStudioNameFromProperty(AzureStorageQueueDefinition.RETURN_QUEUE_NAME);
-        container.setComponentData(componentId, returnQueueName, QueueName);
+        container.setComponentData(componentId, returnQueueName, queueName);
     }
 
 }
