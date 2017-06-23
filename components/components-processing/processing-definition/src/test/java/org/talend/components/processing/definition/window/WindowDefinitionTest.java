@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -52,7 +51,7 @@ public class WindowDefinitionTest {
     @Test
     public void testGetFamilies() {
         String[] families = definition.getFamilies();
-        assertThat(families, Matchers.arrayContaining(ProcessingFamilyDefinition.NAME));
+        assertThat(families, arrayContaining(ProcessingFamilyDefinition.NAME));
     }
 
     /**

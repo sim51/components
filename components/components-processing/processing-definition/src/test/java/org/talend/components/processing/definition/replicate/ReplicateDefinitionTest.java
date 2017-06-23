@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.components.processing.definition.replicate;
 
-import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.components.api.component.ComponentImageType;
@@ -41,7 +40,7 @@ public class ReplicateDefinitionTest {
     @Test
     public void testGetFamilies() {
         String[] families = definition.getFamilies();
-        assertThat(families, Matchers.arrayContaining(ProcessingFamilyDefinition.NAME));
+        assertThat(families, arrayContaining(ProcessingFamilyDefinition.NAME));
     }
 
     /**

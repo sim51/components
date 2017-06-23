@@ -20,7 +20,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
-//import org.talend.components.api.ComponentsPaxExamOptions;
+import org.talend.components.api.ComponentsPaxExamOptions;
 import org.talend.components.common.ProxyPropertiesTest;
 
 @RunWith(PaxExam.class)
