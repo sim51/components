@@ -11,7 +11,7 @@
 //
 // ============================================================================
 
-package org.talend.components.netsuite.v2016_2;
+package org.talend.components.netsuite;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -26,16 +26,16 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.avro.Schema;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.components.netsuite.NetSuiteDatasetRuntimeImpl;
 import org.talend.components.netsuite.client.NetSuiteClientService;
 import org.talend.components.netsuite.client.NetSuiteException;
+import org.talend.components.netsuite.client.TestNetSuiteClientService;
 import org.talend.components.netsuite.client.model.FieldDesc;
 import org.talend.components.netsuite.client.model.TypeDesc;
 import org.talend.components.netsuite.input.NsObjectInputTransducer;
 import org.talend.components.netsuite.json.NsTypeResolverBuilder;
-import org.talend.components.netsuite.v2016_2.client.NetSuiteClientServiceImpl;
 import org.talend.daikon.avro.converter.AvroConverter;
 import org.talend.daikon.exception.ExceptionContext;
 
@@ -44,22 +44,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.netsuite.webservices.v2016_2.lists.accounting.Account;
-import com.netsuite.webservices.v2016_2.lists.accounting.types.AccountType;
-import com.netsuite.webservices.v2016_2.lists.accounting.types.ConsolidatedRate;
-import com.netsuite.webservices.v2016_2.platform.NetSuitePortType;
-import com.netsuite.webservices.v2016_2.platform.core.BooleanCustomFieldRef;
-import com.netsuite.webservices.v2016_2.platform.core.CustomFieldList;
-import com.netsuite.webservices.v2016_2.platform.core.RecordRef;
-import com.netsuite.webservices.v2016_2.platform.core.RecordRefList;
-import com.netsuite.webservices.v2016_2.platform.core.StringCustomFieldRef;
+import com.netsuite.webservices.test.lists.accounting.Account;
+import com.netsuite.webservices.test.lists.accounting.types.AccountType;
+import com.netsuite.webservices.test.lists.accounting.types.ConsolidatedRate;
+import com.netsuite.webservices.test.platform.core.BooleanCustomFieldRef;
+import com.netsuite.webservices.test.platform.core.CustomFieldList;
+import com.netsuite.webservices.test.platform.core.RecordRef;
+import com.netsuite.webservices.test.platform.core.RecordRefList;
+import com.netsuite.webservices.test.platform.core.StringCustomFieldRef;
 
 /**
  *
  */
-public class ValueConverterTest extends NetSuiteMockTestBase {
+public class ValueConverterTest {
 
-    private NetSuiteClientService<NetSuitePortType> clientService = new NetSuiteClientServiceImpl();
+    private NetSuiteClientService<?> clientService = new TestNetSuiteClientService();
     private TypeDesc typeDesc;
     private Schema schema;
 
@@ -94,18 +93,18 @@ public class ValueConverterTest extends NetSuiteMockTestBase {
         FieldDesc fieldDesc = typeDesc.getField("acctType");
         AvroConverter<Enum<AccountType>, String> converter1 =
                 (AvroConverter<Enum<AccountType>, String>) transducer.getValueConverter(fieldDesc);
-        assertEquals(AccountType.ACCOUNTS_PAYABLE.value(),
+        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE.value(),
                 converter1.convertToAvro(AccountType.ACCOUNTS_PAYABLE));
-        assertEquals(AccountType.ACCOUNTS_PAYABLE,
+        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE,
                 converter1.convertToDatum(AccountType.ACCOUNTS_PAYABLE.value()));
 
         fieldDesc = typeDesc.getField("generalRate");
         assertNotNull(fieldDesc);
         AvroConverter<Enum<ConsolidatedRate>, String> converter2 =
                 (AvroConverter<Enum<ConsolidatedRate>, String>) transducer.getValueConverter(fieldDesc);
-        assertEquals(ConsolidatedRate.HISTORICAL.value(),
+        Assert.assertEquals(ConsolidatedRate.HISTORICAL.value(),
                 converter2.convertToAvro(ConsolidatedRate.HISTORICAL));
-        assertEquals(ConsolidatedRate.HISTORICAL,
+        Assert.assertEquals(ConsolidatedRate.HISTORICAL,
                 converter2.convertToDatum(ConsolidatedRate.HISTORICAL.value()));
     }
 
@@ -117,7 +116,7 @@ public class ValueConverterTest extends NetSuiteMockTestBase {
         dateTime1.setDate(System.currentTimeMillis());
         Long controlValue1 = dateTime1.getMillis();
 
-        XMLGregorianCalendar xmlCalendar1 = datatypeFactory.newXMLGregorianCalendar();
+        XMLGregorianCalendar xmlCalendar1 = AbstractNetSuiteTestBase.datatypeFactory.newXMLGregorianCalendar();
         xmlCalendar1.setYear(dateTime1.getYear());
         xmlCalendar1.setMonth(dateTime1.getMonthOfYear());
         xmlCalendar1.setDay(dateTime1.getDayOfMonth());
@@ -143,7 +142,7 @@ public class ValueConverterTest extends NetSuiteMockTestBase {
     public void testJsonConverterComplexObject() throws Exception {
         NsObjectInputTransducer transducer = new NsObjectInputTransducer(clientService, schema, typeDesc.getTypeName());
 
-        Account account1 = new SimpleObjectComposer<>(Account.class).composeObject();
+        Account account1 = new AbstractNetSuiteTestBase.SimpleObjectComposer<>(Account.class).composeObject();
 
         RecordRef recordRef1 = new RecordRef();
         recordRef1.setInternalId("120001");
@@ -213,17 +212,17 @@ public class ValueConverterTest extends NetSuiteMockTestBase {
         assertTrue(testRecordRefNode1.has("internalId"));
         assertTrue(testRecordRefNode1.has("externalId"));
         assertTrue(testRecordRefNode1.has("type"));
-        assertEquals(recordRef1.getName(), testRecordRefNode1.get("name").asText());
-        assertEquals(recordRef1.getInternalId(), testRecordRefNode1.get("internalId").asText());
-        assertEquals(recordRef1.getExternalId(), testRecordRefNode1.get("externalId").asText(null));
+        Assert.assertEquals(recordRef1.getName(), testRecordRefNode1.get("name").asText());
+        Assert.assertEquals(recordRef1.getInternalId(), testRecordRefNode1.get("internalId").asText());
+        Assert.assertEquals(recordRef1.getExternalId(), testRecordRefNode1.get("externalId").asText(null));
         assertNull(testRecordRefNode1.get("type").asText(null));
 
         RecordRef testRecordRef1 = converter1.convertToDatum(recordRefJson1);
         assertNotNull(testRecordRef1);
-        assertEquals(recordRef1.getName(), testRecordRef1.getName());
-        assertEquals(recordRef1.getInternalId(), testRecordRef1.getInternalId());
-        assertEquals(recordRef1.getExternalId(), testRecordRef1.getExternalId());
-        assertEquals(recordRef1.getType(), testRecordRef1.getType());
+        Assert.assertEquals(recordRef1.getName(), testRecordRef1.getName());
+        Assert.assertEquals(recordRef1.getInternalId(), testRecordRef1.getInternalId());
+        Assert.assertEquals(recordRef1.getExternalId(), testRecordRef1.getExternalId());
+        Assert.assertEquals(recordRef1.getType(), testRecordRef1.getType());
     }
 
     @Test
@@ -271,7 +270,7 @@ public class ValueConverterTest extends NetSuiteMockTestBase {
 
         CustomFieldList testCustomFieldList = converter1.convertToDatum(node1.toString());
         assertNotNull(testCustomFieldList);
-        assertEquals(2, testCustomFieldList.getCustomField().size());
+        Assert.assertEquals(2, testCustomFieldList.getCustomField().size());
     }
 
     @Test

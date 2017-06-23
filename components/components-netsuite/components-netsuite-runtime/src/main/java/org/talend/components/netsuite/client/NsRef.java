@@ -60,6 +60,13 @@ public class NsRef {
     /** Identifier of a referenced object's type. */
     private String typeId;
 
+    public NsRef() {
+    }
+
+    public NsRef(RefType refType) {
+        this.refType = refType;
+    }
+
     public RefType getRefType() {
         return refType;
     }
