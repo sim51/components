@@ -13,6 +13,8 @@
 
 package org.talend.components.netsuite;
 
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,6 +38,7 @@ import org.talend.components.netsuite.client.model.FieldDesc;
 import org.talend.components.netsuite.client.model.TypeDesc;
 import org.talend.components.netsuite.input.NsObjectInputTransducer;
 import org.talend.components.netsuite.json.NsTypeResolverBuilder;
+import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.converter.AvroConverter;
 import org.talend.daikon.exception.ExceptionContext;
 
@@ -93,10 +96,14 @@ public class ValueConverterTest {
         FieldDesc fieldDesc = typeDesc.getField("acctType");
         AvroConverter<Enum<AccountType>, String> converter1 =
                 (AvroConverter<Enum<AccountType>, String>) transducer.getValueConverter(fieldDesc);
+        assertEquals(AvroUtils._string(), converter1.getSchema());
+        assertEquals(AccountType.class, converter1.getDatumClass());
         Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE.value(),
                 converter1.convertToAvro(AccountType.ACCOUNTS_PAYABLE));
         Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE,
                 converter1.convertToDatum(AccountType.ACCOUNTS_PAYABLE.value()));
+        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE,
+                converter1.convertToDatum(AccountType.ACCOUNTS_PAYABLE.name()));
 
         fieldDesc = typeDesc.getField("generalRate");
         assertNotNull(fieldDesc);
@@ -132,10 +139,19 @@ public class ValueConverterTest {
 
         AvroConverter<XMLGregorianCalendar, Long> converter1 =
                 (AvroConverter<XMLGregorianCalendar, Long>) transducer.getValueConverter(fieldInfo);
+        assertEquals(AvroUtils._logicalTimestamp(), converter1.getSchema());
+        assertEquals(XMLGregorianCalendar.class, converter1.getDatumClass());
         assertEquals(controlValue1,
                 converter1.convertToAvro(xmlCalendar1));
         assertEquals(xmlCalendar1,
                 converter1.convertToDatum(controlValue1));
+
+        AvroConverter<XMLGregorianCalendar, Object> converter2 =
+                (AvroConverter<XMLGregorianCalendar, Object>) transducer.getValueConverter(fieldInfo);
+        assertEquals(xmlCalendar1,
+                converter2.convertToDatum(new Date(controlValue1.longValue())));
+
+        assertNull(converter1.convertToAvro(null));
     }
 
     @Test
@@ -176,6 +192,8 @@ public class ValueConverterTest {
 
         AvroConverter<Account, String> converter1 =
                 (AvroConverter<Account, String>) transducer.getValueConverter(account1.getClass());
+        assertEquals(AvroUtils._string(), converter1.getSchema());
+        assertEquals(account1.getClass(), converter1.getDatumClass());
 
         String testJson1 = converter1.convertToAvro(account1);
         assertNotNull(testJson1);
