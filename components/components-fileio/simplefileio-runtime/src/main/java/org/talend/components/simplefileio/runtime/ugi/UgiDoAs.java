@@ -137,7 +137,14 @@ public abstract class UgiDoAs implements Serializable {
 
                     @Override
                     public Credentials run() throws IOException {
-                        FileSystem.get(new Configuration()).addDelegationTokens("TCOMP", cred);
+                        Configuration conf = new Configuration();
+                        // TODO: We've explicitly listed all the schemas supported here, but the filesystem schema could be dynamically
+                        // generated from the path (resolved against the default name node).
+                        conf.set("fs.gs.impl.disable.cache", "true");
+                        conf.set("fs.s3t.impl.disable.cache", "true");
+                        conf.set("fs.file.impl.disable.cache", "true");
+                        conf.set("fs.hdfs.impl.disable.cache", "true");
+                        FileSystem.get(conf).addDelegationTokens("TCOMP", cred);
                         return cred;
                     }
                 });
