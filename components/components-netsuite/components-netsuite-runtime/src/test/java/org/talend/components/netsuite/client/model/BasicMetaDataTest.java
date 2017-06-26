@@ -33,6 +33,8 @@ import org.talend.components.netsuite.client.model.customfield.CustomFieldRefTyp
 import org.talend.components.netsuite.client.model.search.SearchFieldAdapter;
 import org.talend.components.netsuite.client.model.search.SearchFieldOperatorName;
 import org.talend.components.netsuite.client.model.search.SearchFieldType;
+import org.talend.components.netsuite.test.client.model.TestRecordTypeEnum;
+import org.talend.components.netsuite.test.client.model.TestSearchRecordTypeEnum;
 
 import com.netsuite.webservices.test.lists.accounting.Account;
 import com.netsuite.webservices.test.platform.core.CustomFieldList;

@@ -11,26 +11,18 @@
 //
 // ============================================================================
 
-package org.talend.components.netsuite.client;
+package org.talend.components.netsuite;
 
-import org.talend.components.netsuite.NetSuiteVersion;
+import org.talend.components.netsuite.client.NetSuiteClientFactory;
 
 import com.netsuite.webservices.test.platform.NetSuitePortType;
 
 /**
  *
  */
-public class TestNetSuiteClientFactory implements NetSuiteClientFactory<NetSuitePortType> {
+public class TestNetSuiteRuntimeImpl extends AbstractNetSuiteRuntime {
 
-    public static final TestNetSuiteClientFactory INSTANCE = new TestNetSuiteClientFactory();
-
-    @Override
-    public NetSuiteClientService<NetSuitePortType> createClient() throws NetSuiteException {
-        return new TestNetSuiteClientService();
-    }
-
-    @Override
-    public NetSuiteVersion getApiVersion() {
-        return new NetSuiteVersion(2016, 2);
+    public TestNetSuiteRuntimeImpl(NetSuiteClientFactory<NetSuitePortType> clientFactory) {
+        this.clientFactory = clientFactory;
     }
 }

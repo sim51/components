@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.components.netsuite.client.NetSuiteClientService;
 import org.talend.components.netsuite.client.NetSuiteException;
-import org.talend.components.netsuite.client.TestNetSuiteClientService;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 import org.talend.components.netsuite.client.model.FieldDesc;
 import org.talend.components.netsuite.client.model.TypeDesc;
 import org.talend.components.netsuite.input.NsObjectInputTransducer;

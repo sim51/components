@@ -11,7 +11,9 @@
 //
 // ============================================================================
 
-package org.talend.components.netsuite.client.model;
+package org.talend.components.netsuite.test.client.model;
+
+import org.talend.components.netsuite.client.model.SearchRecordTypeDesc;
 
 import com.netsuite.webservices.test.activities.scheduling.CalendarEventSearch;
 import com.netsuite.webservices.test.activities.scheduling.CalendarEventSearchAdvanced;

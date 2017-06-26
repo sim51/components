@@ -38,6 +38,7 @@ import org.talend.components.netsuite.client.model.RecordTypeInfo;
 import org.talend.components.netsuite.client.search.SearchCondition;
 import org.talend.components.netsuite.client.search.SearchQuery;
 import org.talend.components.netsuite.test.TestUtils;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

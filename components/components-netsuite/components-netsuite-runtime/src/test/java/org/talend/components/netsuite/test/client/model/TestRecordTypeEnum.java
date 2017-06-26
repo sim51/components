@@ -11,7 +11,9 @@
 //
 // ============================================================================
 
-package org.talend.components.netsuite.client.model;
+package org.talend.components.netsuite.test.client.model;
+
+import org.talend.components.netsuite.client.model.RecordTypeDesc;
 
 import com.netsuite.webservices.test.activities.scheduling.CalendarEvent;
 import com.netsuite.webservices.test.activities.scheduling.PhoneCall;

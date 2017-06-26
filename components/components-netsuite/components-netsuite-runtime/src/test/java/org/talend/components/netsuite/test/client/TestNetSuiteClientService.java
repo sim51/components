@@ -11,7 +11,7 @@
 //
 // ============================================================================
 
-package org.talend.components.netsuite.client;
+package org.talend.components.netsuite.test.client;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -32,6 +32,17 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.mockito.Mockito;
 import org.talend.components.netsuite.NetSuiteErrorCode;
 import org.talend.components.netsuite.NetSuiteRuntimeI18n;
+import org.talend.components.netsuite.client.CustomMetaDataSource;
+import org.talend.components.netsuite.client.EmptyCustomMetaDataSource;
+import org.talend.components.netsuite.client.NetSuiteClientService;
+import org.talend.components.netsuite.client.NetSuiteCredentials;
+import org.talend.components.netsuite.client.NetSuiteException;
+import org.talend.components.netsuite.client.NsPreferences;
+import org.talend.components.netsuite.client.NsReadResponse;
+import org.talend.components.netsuite.client.NsSearchPreferences;
+import org.talend.components.netsuite.client.NsSearchResult;
+import org.talend.components.netsuite.client.NsStatus;
+import org.talend.components.netsuite.client.NsWriteResponse;
 import org.talend.components.netsuite.client.model.BasicMetaData;
 import org.talend.components.netsuite.client.model.TestBasicMetaDataImpl;
 
@@ -253,17 +264,17 @@ public class TestNetSuiteClientService extends NetSuiteClientService<NetSuitePor
 
     @Override
     protected void setHeader(NetSuitePortType port, Header header) {
-        super.setHeader(port, header);
+        // Not supported
     }
 
     @Override
-    protected void removeHeader(QName name) {
-        super.removeHeader(name);
+    protected void removeHeader(NetSuitePortType port, QName name) {
+        // Not supported
     }
 
     @Override
     protected void setHttpClientPolicy(NetSuitePortType port, HTTPClientPolicy httpClientPolicy) {
-        // dp nothing
+        // Not supported
     }
 
     public static <RefT> List<NsWriteResponse<RefT>> toNsWriteResponseList(WriteResponseList writeResponseList) {

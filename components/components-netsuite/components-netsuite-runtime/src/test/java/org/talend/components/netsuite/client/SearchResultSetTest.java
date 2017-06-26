@@ -27,6 +27,8 @@ import org.junit.Test;
 import org.talend.components.netsuite.client.model.RecordTypeInfo;
 import org.talend.components.netsuite.client.model.SearchRecordTypeDesc;
 import org.talend.components.netsuite.client.search.SearchResultSet;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientFactory;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 
 import com.netsuite.webservices.test.lists.accounting.Account;
 import com.netsuite.webservices.test.lists.accounting.AccountSearch;
@@ -66,7 +68,7 @@ public class SearchResultSetTest {
 
         when(conn.search(eq(nsSearchRecord1))).thenReturn(nsSearchResult1);
 
-        NetSuiteClientService<?> clientService = TestNetSuiteClientFactory.INSTANCE.createClient();
+        NetSuiteClientService<?> clientService = new TestNetSuiteClientService();
         RecordTypeInfo recordTypeInfo = clientService.getMetaDataSource().getRecordType("Account");
         SearchRecordTypeDesc searchRecordTypeDesc = clientService.getMetaDataSource()
                 .getSearchRecordType(recordTypeInfo.getRecordType().getSearchRecordType());
@@ -124,7 +126,7 @@ public class SearchResultSetTest {
         when(conn.search(eq(nsSearchRecord1))).thenReturn(nsSearchResult1);
         when(conn.searchMoreWithId(eq("abc123"), eq(2))).thenReturn(nsSearchResult2);
 
-        NetSuiteClientService<?> clientService = TestNetSuiteClientFactory.INSTANCE.createClient();
+        NetSuiteClientService<?> clientService = new TestNetSuiteClientService();
         RecordTypeInfo recordTypeInfo = clientService.getMetaDataSource().getRecordType("Account");
         SearchRecordTypeDesc searchRecordTypeDesc = clientService.getMetaDataSource()
                 .getSearchRecordType(recordTypeInfo.getRecordType().getSearchRecordType());
@@ -189,7 +191,7 @@ public class SearchResultSetTest {
         when(conn.search(eq(nsSearchRecord1))).thenReturn(nsSearchResult1);
         when(conn.searchMoreWithId(eq("abc123"), eq(2))).thenReturn(nsSearchResult2);
 
-        NetSuiteClientService<?> clientService = TestNetSuiteClientFactory.INSTANCE.createClient();
+        NetSuiteClientService<?> clientService = new TestNetSuiteClientService();
         RecordTypeInfo recordTypeInfo = clientService.getMetaDataSource().getRecordType("InventoryItem");
         SearchRecordTypeDesc searchRecordTypeDesc = clientService.getMetaDataSource()
                 .getSearchRecordType(recordTypeInfo.getRecordType().getSearchRecordType());

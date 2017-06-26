@@ -35,7 +35,7 @@ import org.talend.components.netsuite.client.EmptyCustomMetaDataSource;
 import org.talend.components.netsuite.client.MetaDataSource;
 import org.talend.components.netsuite.client.NetSuiteClientService;
 import org.talend.components.netsuite.client.NetSuiteException;
-import org.talend.components.netsuite.client.TestNetSuiteClientService;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 import org.talend.components.netsuite.client.model.CustomFieldDesc;
 import org.talend.components.netsuite.client.model.FieldDesc;
 import org.talend.components.netsuite.client.model.RecordTypeInfo;

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.talend.components.netsuite.client.NsRef;
+import org.talend.components.netsuite.test.client.model.TestRecordTypeEnum;
 
 /**
  *

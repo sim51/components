@@ -20,6 +20,8 @@ import java.util.Collection;
 
 import org.talend.components.netsuite.client.model.search.SearchFieldOperatorType;
 import org.talend.components.netsuite.client.model.search.SearchFieldOperatorTypeDesc;
+import org.talend.components.netsuite.test.client.model.TestRecordTypeEnum;
+import org.talend.components.netsuite.test.client.model.TestSearchRecordTypeEnum;
 
 import com.netsuite.webservices.test.platform.core.BaseRef;
 import com.netsuite.webservices.test.platform.core.CustomFieldList;
