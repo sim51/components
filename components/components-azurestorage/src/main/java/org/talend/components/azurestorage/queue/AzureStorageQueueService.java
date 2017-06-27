@@ -120,4 +120,16 @@ public class AzureStorageQueueService {
         return client.listQueues();
     }
 
+    public long getApproximateMessageCount(String queueName) throws InvalidKeyException, URISyntaxException, StorageException {
+        CloudQueueClient client = connection.getCloudStorageAccount().createCloudQueueClient();
+        CloudQueue queueRef = client.getQueueReference(queueName);
+        return queueRef.getApproximateMessageCount();
+    }
+
+    public void clear(String queueName) throws InvalidKeyException, URISyntaxException, StorageException {
+        CloudQueueClient client = connection.getCloudStorageAccount().createCloudQueueClient();
+        CloudQueue queueRef = client.getQueueReference(queueName);
+        queueRef.clear();
+    }
+
 }

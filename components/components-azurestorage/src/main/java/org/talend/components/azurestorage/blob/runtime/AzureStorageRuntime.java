@@ -14,17 +14,11 @@ import org.talend.components.azurestorage.AzureConnectionWithKeyService;
 import org.talend.components.azurestorage.AzureConnectionWithSasService;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
 import org.talend.components.azurestorage.tazurestorageconnection.TAzureStorageConnectionProperties;
-import org.talend.components.azurestorage.utils.SharedAccessSignatureUtils;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.ValidationResult;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
-import com.microsoft.azure.storage.StorageCredentials;
-import com.microsoft.azure.storage.StorageCredentialsSharedAccessSignature;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.CloudBlobClient;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
 
 public class AzureStorageRuntime implements RuntimableRuntime<ComponentProperties> {
 
@@ -107,25 +101,7 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
     public CloudStorageAccount getStorageAccount(RuntimeContainer runtimeContainer)
             throws URISyntaxException, InvalidKeyException {
 
-        CloudStorageAccount account;
-        TAzureStorageConnectionProperties conn = getUsedConnection(runtimeContainer);
-        if (conn.useSharedAccessSignature.getValue()) {
-            SharedAccessSignatureUtils sas = SharedAccessSignatureUtils
-                    .getSharedAccessSignatureUtils(conn.sharedAccessSignature.getValue());
-            StorageCredentials credentials = new StorageCredentialsSharedAccessSignature(sas.getSharedAccessSignature());
-            account = new CloudStorageAccount(credentials, true, null, sas.getAccount());
-
-        } else {
-            StringBuilder connectionString = new StringBuilder();
-            connectionString.append("DefaultEndpointsProtocol=").append(conn.protocol.getValue().toString().toLowerCase())
-                    //
-                    .append(";AccountName=").append(conn.accountName.getValue())
-                    //
-                    .append(";AccountKey=").append(conn.accountKey.getValue());
-            account = CloudStorageAccount.parse(connectionString.toString());
-        }
-
-        return account;
+        return getAzureConnection(runtimeContainer).getCloudStorageAccount();
     }
 
     public AzureConnection getAzureConnection(RuntimeContainer runtimeContainer) {
@@ -149,31 +125,5 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
                     .accountKey(conn.accountKey.getValue()).build();
         }
 
-    }
-
-    /**
-     * getServiceClient.
-     *
-     * @param runtimeContainer {@link RuntimeContainer} container
-     * @return {@link CloudBlobClient} cloud blob client
-     */
-    public CloudBlobClient getServiceClient(RuntimeContainer runtimeContainer) throws InvalidKeyException, URISyntaxException {
-        return getStorageAccount(runtimeContainer).createCloudBlobClient();
-    }
-
-    /**
-     * getStorageContainerReference.
-     *
-     * @param runtimeContainer {@link RuntimeContainer} container
-     * @param containerName {@link String} storage container
-     * @return {@link CloudBlobContainer} cloud blob container
-     * @throws StorageException
-     * @throws URISyntaxException
-     * @throws InvalidKeyException
-     */
-    public CloudBlobContainer getAzureStorageBlobContainerReference(RuntimeContainer runtimeContainer, String containerName)
-            throws InvalidKeyException, URISyntaxException, StorageException {
-
-        return getServiceClient(runtimeContainer).getContainerReference(containerName);
     }
 }
