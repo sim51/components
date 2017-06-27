@@ -139,9 +139,7 @@ public class JiraReaderTest {
         JiraResponse jr = new JiraResponse(400, "Some error message");
         when(rest.get(anyString(), anyMap())).thenReturn(jr);
 
-
         jiraReader.setRest(rest);
-
 
         jiraReader.makeHttpRequest();
 
