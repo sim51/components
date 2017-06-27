@@ -68,7 +68,7 @@ public class CustomMetaDataSourceTest extends NetSuiteMockTestBase {
 
         clientService = webServiceMockTestFixture.getClientService();
 
-        customMetaDataRetriever = new TestCustomMetaDataRetriever();//mock(DefaultCustomMetaDataSource.CustomMetaDataRetriever.class);
+        customMetaDataRetriever = new TestCustomMetaDataRetriever();
         customMetaDataSource = new DefaultCustomMetaDataSource(clientService, customMetaDataRetriever);
     }
 

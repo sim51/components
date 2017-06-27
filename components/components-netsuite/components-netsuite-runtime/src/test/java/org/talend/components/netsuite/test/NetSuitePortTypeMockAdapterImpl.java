@@ -40,6 +40,9 @@ import com.netsuite.webservices.test.platform.core.DataCenterUrls;
 import com.netsuite.webservices.test.platform.core.GetCustomizationIdResult;
 import com.netsuite.webservices.test.platform.core.GetDataCenterUrlsResult;
 import com.netsuite.webservices.test.platform.core.Status;
+import com.netsuite.webservices.test.platform.core.StatusDetail;
+import com.netsuite.webservices.test.platform.faults.types.StatusDetailCodeType;
+import com.netsuite.webservices.test.platform.faults.types.StatusDetailType;
 import com.netsuite.webservices.test.platform.messages.AddListRequest;
 import com.netsuite.webservices.test.platform.messages.AddListResponse;
 import com.netsuite.webservices.test.platform.messages.AddRequest;
@@ -539,6 +542,17 @@ public class NetSuitePortTypeMockAdapterImpl implements NetSuitePortTypeMockAdap
     public static Status createNotFoundStatus() {
         Status status = new Status();
         status.setIsSuccess(false);
+        return status;
+    }
+
+    public static Status createErrorStatus(StatusDetailCodeType code, String message) {
+        Status status = new Status();
+        status.setIsSuccess(false);
+        StatusDetail statusDetail = new StatusDetail();
+        statusDetail.setType(StatusDetailType.ERROR);
+        statusDetail.setCode(code);
+        statusDetail.setMessage(message);
+        status.getStatusDetail().add(statusDetail);
         return status;
     }
 }
