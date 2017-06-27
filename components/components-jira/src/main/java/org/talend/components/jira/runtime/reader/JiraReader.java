@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.avro.generic.IndexedRecord;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -112,7 +113,7 @@ public abstract class JiraReader implements Reader<IndexedRecord> {
         this.resource = resource;
         this.sharedParameters = createSharedParameters();
         this.result = new Result();
-        rest = new Rest(source.getHostPort());
+        setRest(new Rest(source.getHostPort()));
         String userId = source.getUserId();
         if (userId != null && !userId.isEmpty()) {
             rest.setCredentials(userId, source.getUserPassword());
@@ -123,6 +124,14 @@ public abstract class JiraReader implements Reader<IndexedRecord> {
 
         factory = new IssueAdapterFactory();
         factory.setSchema(source.getSchema());
+    }
+
+    /**
+     *
+     * @param rest initialized REST to set
+     */
+    void setRest(Rest rest) {
+        this.rest = rest;
     }
 
     /**
