@@ -358,11 +358,12 @@ public abstract class AbstractNetSuiteTestBase {
                             TestUtils.readCustomFields(fieldListNode);
                     return customFieldDescMap;
                 }
-                return null;
+                return Collections.emptyMap();
             } catch (IOException e) {
                 throw new NetSuiteException(e.getMessage(), e);
             }
         }
 
     }
+
 }

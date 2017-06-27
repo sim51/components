@@ -19,8 +19,10 @@ import static org.talend.components.netsuite.test.NetSuitePortTypeMockAdapterImp
 import static org.talend.components.netsuite.test.NetSuitePortTypeMockAdapterImpl.createSuccessStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.avro.Schema;
@@ -30,14 +32,22 @@ import org.apache.avro.generic.IndexedRecord;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.talend.components.netsuite.client.NetSuiteClientService;
+import org.talend.components.netsuite.client.NsRef;
+import org.talend.components.netsuite.client.model.RefType;
+import org.talend.components.netsuite.client.model.beans.BeanInfo;
+import org.talend.components.netsuite.client.model.beans.Beans;
+import org.talend.components.netsuite.client.model.beans.PropertyInfo;
 import org.talend.components.netsuite.input.NsObjectInputTransducer;
 import org.talend.components.netsuite.test.NetSuitePortTypeMockAdapterImpl;
 import org.talend.components.netsuite.test.client.TestNetSuiteClientFactory;
+import org.talend.components.netsuite.test.client.model.TestRecordTypeEnum;
 
 import com.netsuite.webservices.test.platform.NetSuitePortType;
+import com.netsuite.webservices.test.platform.core.CustomFieldRef;
 import com.netsuite.webservices.test.platform.core.Record;
 import com.netsuite.webservices.test.platform.core.RecordList;
 import com.netsuite.webservices.test.platform.core.SearchResult;
+import com.netsuite.webservices.test.platform.core.types.RecordType;
 import com.netsuite.webservices.test.platform.messages.GetListRequest;
 import com.netsuite.webservices.test.platform.messages.GetListResponse;
 import com.netsuite.webservices.test.platform.messages.GetRequest;
@@ -51,6 +61,9 @@ import com.netsuite.webservices.test.platform.messages.SearchMoreWithIdResponse;
 import com.netsuite.webservices.test.platform.messages.SearchRequest;
 import com.netsuite.webservices.test.platform.messages.SearchResponse;
 import com.netsuite.webservices.test.platform.messages.SessionResponse;
+import com.netsuite.webservices.test.setup.customization.CustomFieldType;
+import com.netsuite.webservices.test.setup.customization.CustomRecordType;
+import com.netsuite.webservices.test.setup.customization.types.CustomizationFieldType;
 
 /**
  *
@@ -143,6 +156,85 @@ public abstract class NetSuiteMockTestBase extends AbstractNetSuiteTestBase {
         response.setSessionResponse(sessionResponse);
 
         when(port.login(any(LoginRequest.class))).thenReturn(response);
+    }
+
+    protected Map<String, CustomFieldRef> createCustomFieldRefs(
+            Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs) throws Exception {
+
+        NetSuiteClientService<?> clientService = webServiceMockTestFixture.getClientService();
+
+        Map<String, CustomFieldRef> map = new HashMap<>();
+        for (CustomFieldSpec spec : customFieldSpecs.values()) {
+            CustomFieldRef fieldRef = clientService.getBasicMetaData().createInstance(
+                    spec.getFieldRefType().getTypeName());
+
+            fieldRef.setScriptId(spec.getScriptId());
+            fieldRef.setInternalId(spec.getInternalId());
+
+            BeanInfo beanInfo = Beans.getBeanInfo(fieldRef.getClass());
+            PropertyInfo valuePropInfo = beanInfo.getProperty("value");
+
+            Object value = composeValue(valuePropInfo.getWriteType());
+            if (value != null) {
+                Beans.setProperty(fieldRef, "value", value);
+            }
+
+            map.put(fieldRef.getScriptId(), fieldRef);
+        }
+
+        return map;
+    }
+
+    protected Map<String, NsRef> createCustomFieldCustomizationRefs(
+            Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs) throws Exception {
+
+        Map<String, NsRef> map = new HashMap<>();
+        for (CustomFieldSpec<RecordType, CustomizationFieldType> spec : customFieldSpecs.values()) {
+            NsRef ref = new NsRef(RefType.CUSTOMIZATION_REF);
+
+            ref.setScriptId(spec.getScriptId());
+            ref.setInternalId(spec.getInternalId());
+            ref.setType(spec.getRecordType().value());
+
+            map.put(ref.getScriptId(), ref);
+        }
+
+        return map;
+    }
+
+    protected NsRef createCustomRecordCustomizationRef(CustomRecordType customRecordType) throws Exception {
+
+        NsRef ref = new NsRef(RefType.CUSTOMIZATION_REF);
+
+        ref.setScriptId(customRecordType.getScriptId());
+        ref.setInternalId(customRecordType.getInternalId());
+        ref.setType(TestRecordTypeEnum.CUSTOM_RECORD_TYPE.getType());
+        ref.setName(customRecordType.getRecordName());
+
+        return ref;
+    }
+
+    protected Map<String, CustomFieldType> createCustomFieldTypes(
+            Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs) throws Exception {
+
+        Map<String, CustomFieldType> customFieldTypeMap = new HashMap<>();
+        for (CustomFieldSpec<RecordType, CustomizationFieldType> spec : customFieldSpecs.values()) {
+            CustomFieldType fieldRecord = (CustomFieldType) spec.getFieldTypeClass().newInstance();
+
+            Beans.setProperty(fieldRecord, "internalId", spec.getInternalId());
+            fieldRecord.setScriptId(spec.getScriptId());
+            fieldRecord.setFieldType(spec.getFieldType());
+
+            if (spec.getAppliesTo() != null) {
+                for (String appliesTo : spec.getAppliesTo()) {
+                    Beans.setProperty(fieldRecord, appliesTo, Boolean.TRUE);
+                }
+            }
+
+            customFieldTypeMap.put(fieldRecord.getScriptId(), fieldRecord);
+        }
+
+        return customFieldTypeMap;
     }
 
     public static NetSuiteWebServiceMockTestFixture<NetSuitePortType, NetSuitePortTypeMockAdapterImpl> createWebServiceMockTestFixture()

@@ -133,6 +133,7 @@ public class NsRef {
         Object ref = basicMetaData.createInstance(refType.getTypeName());
         BeanInfo beanInfo = Beans.getBeanInfo(ref.getClass());
         setSimpleProperty(ref, "internalId", internalId);
+        setSimpleProperty(ref, "externalId", externalId);
         if (refType == RefType.CUSTOMIZATION_REF || refType == RefType.CUSTOM_RECORD_REF) {
             setSimpleProperty(ref, "scriptId", scriptId);
         }

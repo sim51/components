@@ -51,7 +51,7 @@ import com.netsuite.webservices.test.setup.customization.types.CustomizationFiel
  */
 public class BasicMetaDataTest {
 
-    private TestBasicMetaDataImpl basicMetaData = TestBasicMetaDataImpl.getInstance();
+    private BasicMetaData basicMetaData = TestBasicMetaDataImpl.getInstance();
 
     @Test
     public void testBasicRecordType() {

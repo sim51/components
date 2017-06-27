@@ -33,6 +33,7 @@ import org.apache.cxf.feature.LoggingFeature;
 import org.talend.components.netsuite.NetSuiteErrorCode;
 import org.talend.components.netsuite.NetSuiteRuntimeI18n;
 import org.talend.components.netsuite.client.CustomMetaDataSource;
+import org.talend.components.netsuite.client.DefaultCustomMetaDataSource;
 import org.talend.components.netsuite.client.DefaultMetaDataSource;
 import org.talend.components.netsuite.client.MetaDataSource;
 import org.talend.components.netsuite.client.NetSuiteClientService;
@@ -122,7 +123,7 @@ public class NetSuiteClientServiceImpl extends NetSuiteClientService<NetSuitePor
 
     @Override
     public CustomMetaDataSource createDefaultCustomMetaDataSource() {
-        return new DefaultCustomMetaDataSourceImpl(this);
+        return new DefaultCustomMetaDataSource(this, new CustomMetaDataRetrieverImpl(this));
     }
 
     @Override

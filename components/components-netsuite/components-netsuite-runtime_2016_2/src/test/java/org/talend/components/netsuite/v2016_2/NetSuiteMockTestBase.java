@@ -216,29 +216,6 @@ public abstract class NetSuiteMockTestBase extends AbstractNetSuiteTestBase {
         });
     }
 
-    protected class RecordComposer<T extends Record> extends SimpleObjectComposer<T> {
-        protected Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs;
-
-        public RecordComposer(Class<T> clazz,
-                Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs) {
-            super(clazz);
-            this.customFieldSpecs = customFieldSpecs;
-        }
-
-        @Override
-        public T composeObject() throws Exception {
-            T record = super.composeObject();
-
-            Map<String, CustomFieldRef> customFields = createCustomFieldRefs(customFieldSpecs);
-            Beans.setProperty(record, "customFieldList", new CustomFieldList());
-            List<CustomFieldRef> customFieldList =
-                    (List<CustomFieldRef>) getProperty(record, "customFieldList.customField");
-            customFieldList.addAll(customFields.values());
-
-            return record;
-        }
-    }
-
     protected Map<String, CustomFieldRef> createCustomFieldRefs(
             Map<String, CustomFieldSpec<RecordType, CustomizationFieldType>> customFieldSpecs) throws Exception {
 

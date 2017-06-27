@@ -27,6 +27,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.talend.components.netsuite.avro.converter.XMLGregorianCalendarToDateTimeConverter;
+import org.talend.components.netsuite.client.model.BasicMetaData;
 import org.talend.components.netsuite.client.model.TestBasicMetaDataImpl;
 
 import com.netsuite.webservices.test.platform.core.SearchBooleanCustomField;
@@ -58,7 +59,7 @@ import com.netsuite.webservices.test.platform.core.types.SearchTextNumberFieldOp
  */
 public class SearchFieldAdaptersTest {
 
-    private TestBasicMetaDataImpl basicMetaData = TestBasicMetaDataImpl.getInstance();
+    private BasicMetaData basicMetaData = TestBasicMetaDataImpl.getInstance();
 
     @Test
     public void testAdapterForBooleanSearchField() {
