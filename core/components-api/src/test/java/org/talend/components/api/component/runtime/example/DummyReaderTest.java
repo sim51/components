@@ -22,15 +22,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.talend.components.api.ReaderTest;
+import org.talend.components.api.ReaderUseCases.SourceIsEmpty;
+import org.talend.components.api.ReaderUseCases.SourceNotEmpty;
 import org.talend.components.api.component.runtime.Reader;
 import org.talend.components.api.component.runtime.Source;
 import org.talend.components.api.component.runtime.example.DummyReadService.ServiceException;
 import org.talend.components.api.container.DefaultComponentRuntimeContainerImpl;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.properties.ComponentProperties;
-import org.talend.components.api.test.ReaderTest;
-import org.talend.components.api.test.ReaderUseCases.SourceIsEmpty;
-import org.talend.components.api.test.ReaderUseCases.SourceNotEmpty;
 
 public class DummyReaderTest implements ReaderTest {
 

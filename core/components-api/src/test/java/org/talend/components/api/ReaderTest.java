@@ -10,10 +10,10 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.api.test;
+package org.talend.components.api;
 
+import org.talend.components.api.ReaderUseCases.SourceNotEmpty;
 import org.talend.components.api.component.runtime.Reader;
-import org.talend.components.api.test.ReaderUseCases.SourceNotEmpty;
 
 /**
  * This interface define the main use cases to test for a {@link Reader}
@@ -55,7 +55,7 @@ public interface ReaderTest {
     /**
      * Implement this test using {@link SourceNotEmpty} class.
      * You should initialize properties using {@link SourceNotEmpty#initProperties()} and mock the reader if necessary using
-     * {@link SourceNotEmpty#personalizeReader()} to make {@link SourceNotEmpty#runTest()} work as junit test
+     * {@link SourceNotEmpty#mockReaderService()} to make {@link SourceNotEmpty#runTest()} work as junit test
      */
     public void testStartWithSourceNotEmpty();
 
