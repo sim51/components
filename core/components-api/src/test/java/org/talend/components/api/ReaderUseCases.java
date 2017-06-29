@@ -70,7 +70,7 @@ public class ReaderUseCases {
                 assertTrue(returnedValues.containsKey(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT));
                 assertEquals(1, returnedValues.get(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT));
             } catch (Exception e) {
-                fail("expect that the reader starts whit no error in this scenario. Insteade an exception has been thrown"
+                fail("expect that the reader starts whit no error in this scenario, instead an exception has been thrown"
                         + ExceptionUtils.getStackTrace(e));
             }
         }
@@ -110,7 +110,7 @@ public class ReaderUseCases {
             } catch (NoSuchElementException e) {
                 // This is the expected behavior, so just ignore this exception here
             } catch (Exception e) {
-                fail("expect that the reader starts whit no error in this scenario. Insteade an exception has been thrown"
+                fail("expect that the reader starts whit no error in this scenario, instead an exception has been thrown"
                         + ExceptionUtils.getStackTrace(e));
             }
         }
@@ -164,7 +164,7 @@ public class ReaderUseCases {
                 assertTrue(returnedValues.containsKey(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT));
                 assertEquals(dataCount, returnedValues.get(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT));
             } catch (Exception e) {
-                fail("expect that the reader starts whit no error in this scenario. Insteade an exception has been thrown"
+                fail("expect that the reader starts whit no error in this scenario, instead an exception has been thrown"
                         + ExceptionUtils.getStackTrace(e));
             }
         }
@@ -208,7 +208,7 @@ public class ReaderUseCases {
             } catch (NoSuchElementException e) {
                 // This is the expected behavior, so just ignore this exception here
             } catch (Exception e) {
-                fail("expect that the reader starts whit no error in this scenario. Insteade an exception has been thrown"
+                fail("expect that the reader starts whit no error in this scenario, instead an exception has been thrown"
                         + ExceptionUtils.getStackTrace(e));
             }
         }
