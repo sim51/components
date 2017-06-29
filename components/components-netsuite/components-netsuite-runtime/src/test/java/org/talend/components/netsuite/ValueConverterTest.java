@@ -13,8 +13,6 @@
 
 package org.talend.components.netsuite;
 
-import java.util.Date;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +20,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -33,11 +33,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.components.netsuite.client.NetSuiteClientService;
 import org.talend.components.netsuite.client.NetSuiteException;
-import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 import org.talend.components.netsuite.client.model.FieldDesc;
 import org.talend.components.netsuite.client.model.TypeDesc;
 import org.talend.components.netsuite.input.NsObjectInputTransducer;
 import org.talend.components.netsuite.json.NsTypeResolverBuilder;
+import org.talend.components.netsuite.test.client.TestNetSuiteClientService;
 import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.converter.AvroConverter;
 import org.talend.daikon.exception.ExceptionContext;
@@ -59,7 +59,7 @@ import com.netsuite.webservices.test.platform.core.StringCustomFieldRef;
 /**
  *
  */
-public class ValueConverterTest {
+public class ValueConverterTest extends AbstractNetSuiteTestBase {
 
     private NetSuiteClientService<?> clientService = new TestNetSuiteClientService();
     private TypeDesc typeDesc;
@@ -123,7 +123,7 @@ public class ValueConverterTest {
         dateTime1.setDate(System.currentTimeMillis());
         Long controlValue1 = dateTime1.getMillis();
 
-        XMLGregorianCalendar xmlCalendar1 = AbstractNetSuiteTestBase.datatypeFactory.newXMLGregorianCalendar();
+        XMLGregorianCalendar xmlCalendar1 = datatypeFactory.newXMLGregorianCalendar();
         xmlCalendar1.setYear(dateTime1.getYear());
         xmlCalendar1.setMonth(dateTime1.getMonthOfYear());
         xmlCalendar1.setDay(dateTime1.getDayOfMonth());
@@ -158,7 +158,7 @@ public class ValueConverterTest {
     public void testJsonConverterComplexObject() throws Exception {
         NsObjectInputTransducer transducer = new NsObjectInputTransducer(clientService, schema, typeDesc.getTypeName());
 
-        Account account1 = new AbstractNetSuiteTestBase.SimpleObjectComposer<>(Account.class).composeObject();
+        Account account1 = new SimpleObjectComposer<>(Account.class).composeObject();
 
         RecordRef recordRef1 = new RecordRef();
         recordRef1.setInternalId("120001");

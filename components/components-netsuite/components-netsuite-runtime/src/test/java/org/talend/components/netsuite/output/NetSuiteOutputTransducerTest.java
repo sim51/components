@@ -54,17 +54,6 @@ public class NetSuiteOutputTransducerTest extends NetSuiteMockTestBase {
     protected NetSuitePortType port;
     protected NetSuiteClientService<NetSuitePortType> clientService;
 
-//    @BeforeClass
-//    public static void classSetUp() throws Exception {
-//        installWebServiceTestFixture();
-//        setUpClassScopedTestFixtures();
-//    }
-//
-//    @AfterClass
-//    public static void classTearDown() throws Exception {
-//        tearDownClassScopedTestFixtures();
-//    }
-
     @Override
     @Before
     public void setUp() throws Exception {
