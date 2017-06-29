@@ -19,18 +19,17 @@ plantuml -gui .
 @startuml
 !include sequence.style.plantuml
 
-participant "Data Prep\nFront" as Front
-participant "Data Prep\nBack" as Middleware
-database "Data Prep\nPersistence" as DB
+participant "App Front" as Front
+participant "App Back(Middleware)" as Middleware
+database "App Persistence" as DB
 participant TCOMP
 
-
-== update dataset.  ==
+== create a dataset.  ==
 
 autonumber "<b>[000]"
 
-Front -> Middleware: getUiSpecs for datasetId
-Middleware -> DB: getDataset and Datastore
+Front -> Middleware: getUiSpecs for datasetType
+Middleware -> TCOMP: getDataset and Datastore
 activate DB
 DB -> Middleware
 
@@ -58,6 +57,8 @@ rnote over Middleware #dddedf
       "**tcomp-properties**": {
         "dbTypes": "MYSQL",
         "jdbcUrl": "jdbc:mysql://localhost:3306/db",
+        "userId": "root",
+        "password": "secret",
         "@definitionName": "JDBCDatastore"
       }
     }
@@ -69,7 +70,9 @@ Middleware -> TCOMP: post /properties/JDBCDataset?formName=MAIN
 rnote over TCOMP #dddedf
 {
     "properties": {
+        "sourceType": "QUERY",
         "sql": "select * from tshirts",
+        ...
         "@definitionName": "JDBCDataset"
     },
     "dependencies": [{
