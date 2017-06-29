@@ -3,7 +3,6 @@ package org.talend.components.simplefileio.runtime.s3;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.talend.components.simplefileio.s3.S3DatastoreProperties;
@@ -12,7 +11,6 @@ import org.talend.daikon.properties.ValidationResult;
 /**
  * Unit tests for {@link S3DatastoreRuntime}.
  */
-@Ignore("DEVOPS-2382")
 public class S3DatastoreRuntimeTestIT {
 
     /** Set up credentials for integration tests. */
