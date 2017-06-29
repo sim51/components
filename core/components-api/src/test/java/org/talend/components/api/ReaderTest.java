@@ -55,7 +55,7 @@ public interface ReaderTest {
     /**
      * Implement this test using {@link SourceNotEmpty} class.
      * You should initialize properties using {@link SourceNotEmpty#initProperties()} and mock the reader if necessary using
-     * {@link SourceNotEmpty#mockReaderService()} to make {@link SourceNotEmpty#runTest()} work as junit test
+     * {@link SourceNotEmpty#mockReaderService()} to make {@link SourceNotEmpty#asserTestRun()} work as junit test
      */
     public void testStartWithSourceNotEmpty();
 
