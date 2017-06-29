@@ -436,4 +436,10 @@ public class AzureStorageTableWriter implements WriterWithFeedback<Result, Index
             }
         }
     }
+
+    @Override
+    public void cleanFeedbackData() {
+        rejectedWrites.clear();
+        successfulWrites.clear();
+    }
 }

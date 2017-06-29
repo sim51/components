@@ -626,4 +626,9 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
         successfulWrites.clear();
         rejectedWrites.clear();
     }
+
+    @Override
+    public void cleanFeedbackData() {
+        cleanFeedbackRecords();
+    }
 }
