@@ -84,7 +84,7 @@ public class DummyReaderTest implements ReaderTest {
             }
         };
 
-        usecase.asserTestRun();
+        usecase.assertTestRun();
 
     }
 
@@ -113,7 +113,7 @@ public class DummyReaderTest implements ReaderTest {
             }
         };
 
-        usecase.asserTestRun();
+        usecase.assertTestRun();
 
     }
 

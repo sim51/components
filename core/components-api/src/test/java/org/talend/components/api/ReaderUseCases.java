@@ -54,7 +54,7 @@ public class ReaderUseCases {
         }
 
         @Override
-        public final void asserTestRun() {
+        public final void assertTestRun() {
             assertEquals(ValidationResult.Result.OK, source.initialize(container, initProperties()).getStatus());
             assertEquals(ValidationResult.Result.OK, source.validate(container).getStatus());
 
@@ -94,7 +94,7 @@ public class ReaderUseCases {
         }
 
         @Override
-        public final void asserTestRun() {
+        public final void assertTestRun() {
             assertEquals(ValidationResult.Result.OK, source.initialize(container, initProperties()).getStatus());
             assertEquals(ValidationResult.Result.OK, source.validate(container).getStatus());
 
@@ -137,7 +137,7 @@ public class ReaderUseCases {
         }
 
         @Override
-        public final void asserTestRun() {
+        public final void assertTestRun() {
             assertEquals(ValidationResult.Result.OK, source.initialize(container, initProperties()).getStatus());
             assertEquals(ValidationResult.Result.OK, source.validate(container).getStatus());
 
@@ -190,7 +190,7 @@ public class ReaderUseCases {
         }
 
         @Override
-        public final void asserTestRun() {
+        public final void assertTestRun() {
             assertEquals(ValidationResult.Result.OK, source.initialize(container, initProperties()).getStatus());
             assertEquals(ValidationResult.Result.OK, source.validate(container).getStatus());
 
@@ -235,7 +235,7 @@ public class ReaderUseCases {
         /**
          * Run the test use case assertions
          */
-        public abstract void asserTestRun();
+        public abstract void assertTestRun();
 
         /**
          * Personalize the created reader.<br/>
