@@ -20,9 +20,7 @@ import org.talend.components.simplefileio.s3.output.S3OutputProperties;
 import org.talend.daikon.avro.AvroRegistry;
 import org.talend.daikon.avro.converter.IndexedRecordConverter;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.internal.Constants;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.SSEAwsKeyManagementParams;
 import com.csvreader.CsvWriter;
@@ -59,17 +57,14 @@ public class S3OutputWriter implements Writer<Result> {
         this.result = new Result();
     }
 
+    /**
+     * there is a risk for this as we only check the connection by calling putObject method in the close method, mean that we
+     * only checking the connection after the file is created.
+     */
     @Override
     public void open(String uId) throws IOException {
         // connect to s3
         s3_client = S3Connection.createClient(properties);
-        try {
-            s3_client.listObjects(properties.getDatasetProperties().bucket.getValue(), "any");
-        } catch (AmazonServiceException ase) {
-            if (ase.getStatusCode() != Constants.NO_SUCH_BUCKET_STATUS_CODE) {
-                throw ase;
-            }
-        }
 
         // prepare the local target, will upload it to s3 and clear it in the close method
         String tmpDir = System.getProperty("java.io.tmpdir");

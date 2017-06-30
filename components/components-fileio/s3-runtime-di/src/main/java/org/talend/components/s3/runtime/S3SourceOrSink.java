@@ -51,6 +51,16 @@ public class S3SourceOrSink implements SourceOrSink {
     public ValidationResult validate(RuntimeContainer container) {
         try {
             AmazonS3 conn = S3Connection.createClient(properties);
+            /**
+             * we have to call a method like this for checking if the connection is OK(username, password, endpoint and so on),
+             * not care about if bucket exists.
+             * keep the same logic with the beam one.
+             * 
+             * getBucketLoggingConfiguration and getBucketLocation method don't work for some region like Tokyo(connect to it from
+             * Beijing) even when the connection config is right.
+             * doesBucketLocation can return true even when one the connection config is wrong.
+             * So use listObjects method though poor performance
+             */
             try {
                 conn.listObjects(properties.getDatasetProperties().bucket.getValue(), "any");
             } catch (AmazonServiceException ase) {

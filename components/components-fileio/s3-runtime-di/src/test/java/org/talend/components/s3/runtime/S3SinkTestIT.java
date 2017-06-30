@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.talend.components.simplefileio.s3.output.S3OutputProperties;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 
 @Ignore("DEVOPS-2382")
 public class S3SinkTestIT {
@@ -32,6 +33,32 @@ public class S3SinkTestIT {
     @Test
     public void testAction() throws IOException {
         S3OutputProperties properties = PropertiesPreparer.createS3OtuputProperties();
+        
+        doWrite(properties);
+
+        AmazonS3 s3_client = S3Connection.createClient(properties);
+        String data = s3_client.getObjectAsString(PropertiesPreparer.bucket, PropertiesPreparer.objectkey);
+        String expect = "ID;NAME1;wangwei2;gaoyan3;dabao";
+        org.junit.Assert.assertEquals("data content is not right", expect, data.replaceAll("[\r\n]+", ""));
+    }
+
+    @Test(expected = AmazonS3Exception.class)
+    public void testActionWithWrongPassword() throws IOException {
+        S3OutputProperties properties = PropertiesPreparer.createS3OtuputProperties();
+        properties.getDatasetProperties().getDatastoreProperties().secretKey.setValue("wrongone");
+        
+        doWrite(properties);
+    }
+
+    @Test(expected = AmazonS3Exception.class)
+    public void testActionWithNonExistBucket() throws IOException {
+        S3OutputProperties properties = PropertiesPreparer.createS3OtuputProperties();
+        properties.getDatasetProperties().bucket.setValue("notexist2017");
+        
+        doWrite(properties);
+    }
+
+    private void doWrite(S3OutputProperties properties) throws IOException {
         runtime.initialize(null, properties);
         S3WriteOperation writeOperation = runtime.createWriteOperation();
         S3OutputWriter writer = writeOperation.createWriter(null);
@@ -56,11 +83,6 @@ public class S3SinkTestIT {
         writer.write(r3);
 
         writer.close();
-
-        AmazonS3 s3_client = S3Connection.createClient(properties);
-        String data = s3_client.getObjectAsString(PropertiesPreparer.bucket, PropertiesPreparer.objectkey);
-        String expect = "ID;NAME1;wangwei2;gaoyan3;dabao";
-        org.junit.Assert.assertEquals("data content is not right", expect, data.replaceAll("[\r\n]+", ""));
     }
 
 }
