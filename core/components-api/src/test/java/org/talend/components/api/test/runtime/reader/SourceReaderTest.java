@@ -12,10 +12,6 @@
 // ============================================================================
 package org.talend.components.api.test.runtime.reader;
 
-import javax.xml.transform.Source;
-
-import org.talend.components.api.component.runtime.Reader;
-
 /**
  * This interface define the main use cases to test for a {@link Source} {@link Reader}.
  * <br/>
