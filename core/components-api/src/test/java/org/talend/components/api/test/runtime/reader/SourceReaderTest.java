@@ -42,9 +42,9 @@ public interface SourceReaderTest {
     void testReadSourceWithOnly1Element();
 
     /**
-     * Test the reader behavior when the data source contains multiple elements
+     * Test the reader behavior when the data source contains many elements
      */
-    void testReadSourceWithMultipleElements();
+    void testReadSourceWithManyElements();
 
     /**
      * Test the reader behavior when the data source is unavailable reader stop

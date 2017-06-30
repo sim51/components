@@ -112,7 +112,7 @@ public class DummyReaderTest implements SourceReaderTest {
 
     @Test
     @Override
-    public void testReadSourceWithMultipleElements() {
+    public void testReadSourceWithManyElements() {
         try {
 
             // setup
