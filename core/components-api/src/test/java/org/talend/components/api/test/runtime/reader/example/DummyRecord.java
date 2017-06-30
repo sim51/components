@@ -10,31 +10,40 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.api.component.runtime.example;
+package org.talend.components.api.test.runtime.reader.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 
-/**
- * A service that encapsulate the interaction with external system / API calls
- */
-public class DummyReadService {
+public class DummyRecord implements IndexedRecord {
 
-    public boolean start() throws ServiceException {
-        return true;
+    List<Object> data;
+
+    /**
+     * @param o
+     */
+    public DummyRecord(Object o) {
+        data = new ArrayList<>();
+        data.add(o);
     }
 
-    public IndexedRecord read() throws ServiceException {
+    @Override
+    public Schema getSchema() {
         return null;
     }
 
-    public void close() throws ServiceException {
+    @Override
+    public void put(int i, Object v) {
+        data.add(i, v);
 
     }
 
-    public static class ServiceException extends Exception {
-
-        private static final long serialVersionUID = 8839941634399312018L;
-
+    @Override
+    public Object get(int i) {
+        return data.get(i);
     }
 
 }

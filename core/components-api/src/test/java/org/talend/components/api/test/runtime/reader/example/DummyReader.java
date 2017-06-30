@@ -10,9 +10,11 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.components.api.component.runtime.example;
+package org.talend.components.api.test.runtime.reader.example;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -21,13 +23,15 @@ import org.joda.time.Instant;
 import org.talend.components.api.component.runtime.AbstractBoundedReader;
 import org.talend.components.api.component.runtime.BoundedSource;
 import org.talend.components.api.component.runtime.Result;
-import org.talend.components.api.component.runtime.example.DummyReadService.ServiceException;
 import org.talend.components.api.exception.ComponentException;
+import org.talend.components.api.test.runtime.reader.example.DummyReadService.ServiceException;
 
 public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
 
+    // Reader service
     public DummyReadService readerService;
 
+    // reader parameters
     private boolean dieOnError;
 
     private boolean started;
@@ -35,6 +39,8 @@ public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
     private Boolean advanced;
 
     private IndexedRecord current;
+
+    private Iterator<Object> recordsIterator;
 
     private Result result;
 
@@ -52,10 +58,11 @@ public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
     @Override
     public boolean start() throws IOException {
         try {
-
-            started = readerService.start();
+            started = readerService.connect();
             if (started) {
-                current = readerService.read();
+                List<Object> records = readerService.read();
+                recordsIterator = records.iterator();
+                current = convertRecordToAvro(recordsIterator.next());
                 result.totalCount++;
             }
 
@@ -74,19 +81,17 @@ public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
             return false;
         }
 
-        try {
-
-            current = readerService.read();
-            advanced = true;
+        advanced = recordsIterator.hasNext();
+        if (advanced) {
+            current = convertRecordToAvro(recordsIterator.next());
             result.totalCount++;
-
-        } catch (ServiceException e) {
-            if (dieOnError) {
-                throw new ComponentException(e);
-            }
         }
 
         return advanced;
+    }
+
+    private IndexedRecord convertRecordToAvro(Object o) {
+        return new DummyRecord(o);
     }
 
     @Override
@@ -107,7 +112,7 @@ public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
     @Override
     public void close() throws IOException {
         try {
-            readerService.close();
+            readerService.disconnect();
 
         } catch (ServiceException e) {
             if (dieOnError) {
