@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.apache.avro.SchemaBuilder;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
 import org.joda.time.Instant;
 import org.talend.components.api.component.runtime.AbstractBoundedReader;
@@ -26,6 +28,15 @@ import org.talend.components.api.component.runtime.Result;
 import org.talend.components.api.exception.ComponentException;
 import org.talend.components.api.test.runtime.reader.example.DummyReadService.ServiceException;
 
+/**
+ * This is an example of a Reader implementation that is easy to cover by unit tests.<br/>
+ * The external API calls should be wrapped in DummyReadService class like.<br/>
+ * This DummyReadService can be mocked easily to emulate the external API behavior to test the reader logic.
+ * 
+ * <br/>
+ * <b>Note that this is not a complete implementation but just an example that show how to encapsulate external api interaction to
+ * improve unit testing</b>
+ */
 public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
 
     // Reader service
@@ -90,8 +101,11 @@ public class DummyReader extends AbstractBoundedReader<IndexedRecord> {
         return advanced;
     }
 
+    /**
+     * this is not a complete implementation (used to show example only)
+     */
     private IndexedRecord convertRecordToAvro(Object o) {
-        return new DummyRecord(o);
+        return new GenericData.Record(SchemaBuilder.record("record").fields().endRecord());
     }
 
     @Override

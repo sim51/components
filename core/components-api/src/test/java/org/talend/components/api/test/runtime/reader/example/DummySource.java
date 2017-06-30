@@ -23,11 +23,12 @@ import org.talend.components.api.properties.ComponentProperties;
 import org.talend.daikon.NamedThing;
 import org.talend.daikon.properties.ValidationResult;
 
+/**
+ * An example of a data source
+ */
 public class DummySource implements BoundedSource {
 
     private static final long serialVersionUID = -2859353629597048397L;
-
-    private RuntimeContainer container;
 
     private DummyComponentProperties properties;
 
@@ -50,7 +51,6 @@ public class DummySource implements BoundedSource {
 
     @Override
     public ValidationResult initialize(RuntimeContainer container, ComponentProperties properties) {
-        this.container = container;
         this.properties = (DummyComponentProperties) properties;
         return ValidationResult.OK;
     }

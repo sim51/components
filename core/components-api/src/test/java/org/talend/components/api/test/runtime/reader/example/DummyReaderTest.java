@@ -33,6 +33,10 @@ import org.talend.components.api.test.runtime.reader.SourceReaderTest;
 import org.talend.components.api.test.runtime.reader.example.DummyReadService.ServiceException;
 import org.talend.daikon.properties.ValidationResult;
 
+/**
+ * This an example of {@link SourceReaderTest} implementation that use the {@link ReaderAssert} and benefit from the
+ * Reader/ReaderService design to test the reader logic
+ */
 public class DummyReaderTest implements SourceReaderTest {
 
     @Mock

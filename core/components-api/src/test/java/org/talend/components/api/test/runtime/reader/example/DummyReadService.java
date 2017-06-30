@@ -15,7 +15,7 @@ package org.talend.components.api.test.runtime.reader.example;
 import java.util.List;
 
 /**
- * A service that encapsulate the interaction with external system / API calls
+ * This is an example service that wrap the interactions with the external system / API calls.
  */
 public class DummyReadService {
 
