@@ -28,7 +28,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.avro.Schema;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.components.netsuite.client.NetSuiteClientService;
@@ -98,20 +97,20 @@ public class ValueConverterTest extends AbstractNetSuiteTestBase {
                 (AvroConverter<Enum<AccountType>, String>) transducer.getValueConverter(fieldDesc);
         assertEquals(AvroUtils._string(), converter1.getSchema());
         assertEquals(AccountType.class, converter1.getDatumClass());
-        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE.value(),
+        assertEquals(AccountType.ACCOUNTS_PAYABLE.value(),
                 converter1.convertToAvro(AccountType.ACCOUNTS_PAYABLE));
-        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE,
+        assertEquals(AccountType.ACCOUNTS_PAYABLE,
                 converter1.convertToDatum(AccountType.ACCOUNTS_PAYABLE.value()));
-        Assert.assertEquals(AccountType.ACCOUNTS_PAYABLE,
+        assertEquals(AccountType.ACCOUNTS_PAYABLE,
                 converter1.convertToDatum(AccountType.ACCOUNTS_PAYABLE.name()));
 
         fieldDesc = typeDesc.getField("generalRate");
         assertNotNull(fieldDesc);
         AvroConverter<Enum<ConsolidatedRate>, String> converter2 =
                 (AvroConverter<Enum<ConsolidatedRate>, String>) transducer.getValueConverter(fieldDesc);
-        Assert.assertEquals(ConsolidatedRate.HISTORICAL.value(),
+        assertEquals(ConsolidatedRate.HISTORICAL.value(),
                 converter2.convertToAvro(ConsolidatedRate.HISTORICAL));
-        Assert.assertEquals(ConsolidatedRate.HISTORICAL,
+        assertEquals(ConsolidatedRate.HISTORICAL,
                 converter2.convertToDatum(ConsolidatedRate.HISTORICAL.value()));
     }
 
@@ -230,17 +229,17 @@ public class ValueConverterTest extends AbstractNetSuiteTestBase {
         assertTrue(testRecordRefNode1.has("internalId"));
         assertTrue(testRecordRefNode1.has("externalId"));
         assertTrue(testRecordRefNode1.has("type"));
-        Assert.assertEquals(recordRef1.getName(), testRecordRefNode1.get("name").asText());
-        Assert.assertEquals(recordRef1.getInternalId(), testRecordRefNode1.get("internalId").asText());
-        Assert.assertEquals(recordRef1.getExternalId(), testRecordRefNode1.get("externalId").asText(null));
+        assertEquals(recordRef1.getName(), testRecordRefNode1.get("name").asText());
+        assertEquals(recordRef1.getInternalId(), testRecordRefNode1.get("internalId").asText());
+        assertEquals(recordRef1.getExternalId(), testRecordRefNode1.get("externalId").asText(null));
         assertNull(testRecordRefNode1.get("type").asText(null));
 
         RecordRef testRecordRef1 = converter1.convertToDatum(recordRefJson1);
         assertNotNull(testRecordRef1);
-        Assert.assertEquals(recordRef1.getName(), testRecordRef1.getName());
-        Assert.assertEquals(recordRef1.getInternalId(), testRecordRef1.getInternalId());
-        Assert.assertEquals(recordRef1.getExternalId(), testRecordRef1.getExternalId());
-        Assert.assertEquals(recordRef1.getType(), testRecordRef1.getType());
+        assertEquals(recordRef1.getName(), testRecordRef1.getName());
+        assertEquals(recordRef1.getInternalId(), testRecordRef1.getInternalId());
+        assertEquals(recordRef1.getExternalId(), testRecordRef1.getExternalId());
+        assertEquals(recordRef1.getType(), testRecordRef1.getType());
     }
 
     @Test
@@ -288,7 +287,7 @@ public class ValueConverterTest extends AbstractNetSuiteTestBase {
 
         CustomFieldList testCustomFieldList = converter1.convertToDatum(node1.toString());
         assertNotNull(testCustomFieldList);
-        Assert.assertEquals(2, testCustomFieldList.getCustomField().size());
+        assertEquals(2, testCustomFieldList.getCustomField().size());
     }
 
     @Test
