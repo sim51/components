@@ -14,9 +14,10 @@
     </properties>
 
     <modules>
+        <module>components-test01-parent</module>
         <module>components-test01-definition</module>
         <module>components-test01-runtime</module>
-	<module>components-test01-integration</module>
+        <module>components-test01-integration</module>
     </modules>
 
 </project>

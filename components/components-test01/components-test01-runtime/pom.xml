@@ -3,17 +3,20 @@
 
 	<parent>
 		<groupId>org.talend.components</groupId>
-		<artifactId>components-parent</artifactId>
+		<artifactId>components-test01-parent</artifactId>
 		<version>0.20.0-SNAPSHOT</version>
-		<relativePath>../../../components-parent/pom.xml</relativePath>
+		<!--<relativePath>../../../components-parent/pom.xml</relativePath>-->
+		<relativePath>../components-test01-parent/pom.xml</relativePath>
 	</parent>
-
-	<properties>
-	</properties>
 
 	<name>Components - Test 01 Runtime</name>
 	<artifactId>components-test01-runtime</artifactId>
 	<packaging>bundle</packaging>
+
+	<properties>
+		<coverage.reportRoot>${project.basedir}/../components-test01-parent</coverage.reportRoot>
+	</properties>
+
 	<dependencies>
 		<dependency>
             <groupId>org.talend.components</groupId>
@@ -160,7 +163,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<argLine>-Xms512m -Xmx1024m</argLine>
+					<argLine>-Xms512m -Xmx1024m ${jacoco.agent.it.argLine}</argLine>
 					<systemPropertyVariables>
 						<pax.exam.karaf.version>4.0.2</pax.exam.karaf.version>
 					</systemPropertyVariables>
