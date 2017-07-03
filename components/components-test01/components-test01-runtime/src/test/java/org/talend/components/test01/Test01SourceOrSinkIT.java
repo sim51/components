@@ -25,6 +25,7 @@ public class Test01SourceOrSinkIT {
         Test01Definition definition = new Test01Definition();
         Test01Properties properties = new Test01Properties();
         Test01SourceOrSink sourceOrSink = new Test01SourceOrSink();
+        Test01Reader reader = new Test01Reader();
 
         definition.method1();
         definition.method2();
@@ -36,6 +37,7 @@ public class Test01SourceOrSinkIT {
 
         sourceOrSink.method1();
         sourceOrSink.method2();
+        reader.method1();
     }
 
     @Test
@@ -43,6 +45,7 @@ public class Test01SourceOrSinkIT {
         Test01Definition definition = new Test01Definition();
         Test01Properties properties = new Test01Properties();
         Test01SourceOrSink sourceOrSink = new Test01SourceOrSink();
+        Test01Reader reader = new Test01Reader();
 
         definition.method1();
         definition.method2();
@@ -54,5 +57,6 @@ public class Test01SourceOrSinkIT {
 
         sourceOrSink.method2();
         sourceOrSink.method3();
+        reader.method1();
     }
 }
