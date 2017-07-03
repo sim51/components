@@ -301,7 +301,7 @@ public abstract class JiraReader implements Reader<IndexedRecord> {
     private ComponentException generateJiraException(int code, String errorMessage) {
 
         return new ComponentException(new DefaultErrorCode(code), ExceptionContext.build()
-                .put("message","Can't get response from server, error code is " + code + errorMessage));
+                .put("message", "Can't get response from server, error code is " + code + "\n" + errorMessage));
 
     }
 
