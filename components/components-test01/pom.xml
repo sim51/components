@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.talend.components</groupId>
+    <artifactId>components-test01-aggregator</artifactId>
+    <version>0.20.0-SNAPSHOT</version>
+
+    <name>Components - Test 01 Aggregator</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- skip the deployment for this aggregator as it's not necessary -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <modules>
+        <module>components-test01-definition</module>
+        <module>components-test01-runtime</module>
+	<module>components-test01-integration</module>
+    </modules>
+
+</project>
