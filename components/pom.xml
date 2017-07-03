@@ -14,6 +14,7 @@
     </properties>
 
     <modules>
+        <!--
         <module>components-azurestorage</module>
         <module>components-fileio</module>
         <module>components-jms</module>
@@ -32,8 +33,10 @@
         <module>components-netsuite</module>
         <module>components-hadoopcluster</module>
 
-        <!-- Slow-building components are built last. -->
         <module>components-salesforce</module>
         <module>components-snowflake</module>
+        -->
+
+        <module>components-test01</module>
     </modules>
 </project>
