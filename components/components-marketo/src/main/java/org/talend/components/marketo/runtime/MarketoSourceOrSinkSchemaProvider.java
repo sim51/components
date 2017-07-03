@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.avro.Schema;
+import org.apache.avro.Schema.Field;
 import org.talend.components.api.component.runtime.SourceOrSink;
 
 public interface MarketoSourceOrSinkSchemaProvider extends SourceOrSink {
@@ -29,4 +30,6 @@ public interface MarketoSourceOrSinkSchemaProvider extends SourceOrSink {
     Schema getSchemaForOpportunityRole() throws IOException;
 
     List<String> getCompoundKeyFields(String resource) throws IOException;
+
+    List<Field> getAllLeadFields() throws IOException;
 }
