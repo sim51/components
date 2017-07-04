@@ -3,10 +3,9 @@
 
 	<parent>
 		<groupId>org.talend.components</groupId>
-		<artifactId>components-test01-parent</artifactId>
+		<artifactId>components-parent</artifactId>
 		<version>0.20.0-SNAPSHOT</version>
-		<!--<relativePath>../../../components-parent/pom.xml</relativePath>-->
-		<relativePath>../components-test01-parent/pom.xml</relativePath>
+		<relativePath>../../../components-parent/pom.xml</relativePath>
 	</parent>
 
 	<name>Components - Test 01 Runtime</name>
@@ -14,7 +13,7 @@
 	<packaging>bundle</packaging>
 
 	<properties>
-		<coverage.reportRoot>${project.basedir}/../components-test01-parent</coverage.reportRoot>
+		<coverage.reportRoot>${project.basedir}/../components-test01-reporting</coverage.reportRoot>
 	</properties>
 
 	<dependencies>

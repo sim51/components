@@ -629,5 +629,15 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>cross-module-coverage-report</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.jacoco.reportPath>${jacoco.reportPath}</sonar.jacoco.reportPath>
+				<sonar.jacoco.itReportPath>${jacoco.itReportPath}</sonar.jacoco.itReportPath>
+			</properties>
+		</profile>
 	</profiles>
 </project>

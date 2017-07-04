@@ -8,8 +8,8 @@
         <relativePath>../../../components-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>components-test01-parent</artifactId>
-    <name>Components - Test 01 Parent</name>
+    <artifactId>components-test01-reporting</artifactId>
+    <name>Components - Test 01 Reporting</name>
     <packaging>pom</packaging>
 
     <properties>
