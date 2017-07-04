@@ -25,7 +25,9 @@ import java.util.NoSuchElementException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.talend.components.api.component.runtime.Source;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.exception.ComponentException;
@@ -56,6 +58,9 @@ public class JiraReaderTest {
     private JiraSource source;
 
     private TJiraInputProperties properties;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /**
      * Creates {@link ComponentService} for tests
@@ -131,8 +136,11 @@ public class JiraReaderTest {
         assertEquals(source, currentSource);
     }
 
-    @Test(expected = ComponentException.class)
+    @Test
     public void testThrowComponentExceptionWhenErrorOccurred() throws IOException {
+        thrown.expect(ComponentException.class);
+        thrown.expectMessage("Can't get response from server, error code is 400\nSome error message");
+
         JiraSearchReader jiraReader = new JiraSearchReader(source);
         Rest rest = mock(Rest.class);
 
