@@ -13,7 +13,8 @@
 	<packaging>bundle</packaging>
 
 	<properties>
-		<coverage.reportRoot>${project.basedir}/../components-test01-reporting</coverage.reportRoot>
+		<comp.name.prefix>components-test01</comp.name.prefix>
+		<coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
 	</properties>
 
 	<dependencies>

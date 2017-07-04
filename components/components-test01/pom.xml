@@ -14,10 +14,10 @@
     </properties>
 
     <modules>
-        <module>components-test01-reporting</module>
         <module>components-test01-definition</module>
         <module>components-test01-runtime</module>
         <module>components-test01-integration</module>
+        <module>components-test01-reporting</module>
     </modules>
 
 </project>

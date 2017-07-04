@@ -28,12 +28,9 @@
 		<docker.removeVolumes>true</docker.removeVolumes>
 		<talend_snapshots_deployment>https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot/</talend_snapshots_deployment>
 
-		<coverage.reportRoot>${project.basedir}</coverage.reportRoot>
-		<jacoco.reportRoot>${coverage.reportRoot}/target/jacoco</jacoco.reportRoot>
-		<jacoco.reportPath>${jacoco.reportRoot}/jacoco.exec</jacoco.reportPath>
-		<jacoco.itReportPath>${jacoco.reportRoot}/jacoco-it.exec</jacoco.itReportPath>
-		<sonar.jacoco.reportPath>${jacoco.reportPath}</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${jacoco.itReportPath}</sonar.jacoco.itReportPath>
+		<coverage.sonar.reportRoot>${project.basedir}</coverage.sonar.reportRoot>
+		<sonar.jacoco.reportPath>${coverage.sonar.reportRoot}/target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.jacoco.itReportPath>${coverage.sonar.reportRoot}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 
 	</properties>
 
@@ -470,7 +467,6 @@
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
-							<destFile>${jacoco.reportPath}</destFile>
 							<append>true</append>
 						</configuration>
 					</execution>
@@ -482,7 +478,6 @@
 						</goals>
 						<configuration>
 							<propertyName>jacoco.agent.it.argLine</propertyName>
-							<destFile>${jacoco.itReportPath}</destFile>
 							<append>true</append>
 						</configuration>
 					</execution>
@@ -492,9 +487,6 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
-						<configuration>
-							<dataFile>${jacoco.reportPath}</dataFile>
-						</configuration>
 					</execution>
 					<execution>
 						<id>report-it</id>
@@ -502,9 +494,6 @@
 						<goals>
 							<goal>report-integration</goal>
 						</goals>
-						<configuration>
-							<dataFile>${jacoco.itReportPath}</dataFile>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -628,16 +617,6 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-		<profile>
-			<id>cross-module-coverage-report</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<sonar.jacoco.reportPath>${jacoco.reportPath}</sonar.jacoco.reportPath>
-				<sonar.jacoco.itReportPath>${jacoco.itReportPath}</sonar.jacoco.itReportPath>
-			</properties>
 		</profile>
 	</profiles>
 </project>
