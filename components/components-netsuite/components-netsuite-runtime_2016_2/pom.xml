@@ -15,6 +15,8 @@
     <properties>
         <cxf.version>3.1.11</cxf.version>
         <skipITs>true</skipITs>
+        <comp.name.prefix>components-netsuite</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>
@@ -224,7 +226,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>-Xms512m -Xmx1024m</argLine>
+                    <argLine>-Xms512m -Xmx1024m ${jacoco.agent.it.argLine}</argLine>
                     <systemPropertyVariables>
                         <pax.exam.karaf.version>4.0.2</pax.exam.karaf.version>
                         <netsuite.endpoint.url>${netsuite.endpoint.2016_2.url}</netsuite.endpoint.url>

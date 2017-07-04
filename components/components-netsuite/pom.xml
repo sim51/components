@@ -18,6 +18,7 @@
         <module>components-netsuite-runtime</module>
         <module>components-netsuite-runtime_2016_2</module>
         <module>components-netsuite-runtime_2014_2</module>
+        <module>components-netsuite-reporting</module>
     </modules>
 
 </project>
