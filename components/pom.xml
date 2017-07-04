@@ -32,8 +32,10 @@
         <module>components-marketo</module>
         <module>components-netsuite</module>
         <module>components-hadoopcluster</module>
+        -->
 
         <module>components-salesforce</module>
+        <!--
         <module>components-snowflake</module>
         -->
 

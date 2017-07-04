@@ -17,6 +17,7 @@
         <module>components-salesforce-definition</module>
         <module>components-salesforce-runtime</module>
 		<module>components-salesforce-integration</module>
+		<module>components-salesforce-reporting</module>
     </modules>
 
 </project>

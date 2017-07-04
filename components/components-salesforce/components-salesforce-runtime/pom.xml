@@ -11,6 +11,8 @@
 	    <antlr4.version>4.6</antlr4.version>
 		<partner.version>39.0.0</partner.version>
 		<jetty.version>9.2.19.v20160908</jetty.version>
+		<comp.name.prefix>components-salesforce</comp.name.prefix>
+		<coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
 	</properties>
 
 	<name>Components - Salesforce Runtime</name>
