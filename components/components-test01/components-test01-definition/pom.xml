@@ -124,34 +124,6 @@
 	<build>
 
 		<plugins>
-			<!--<plugin>-->
-				<!--<groupId>org.jacoco</groupId>-->
-				<!--<artifactId>jacoco-maven-plugin</artifactId>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>prepare-agent-ut</id>-->
-						<!--<goals>-->
-							<!--<goal>prepare-agent</goal>-->
-						<!--</goals>-->
-						<!--<configuration>-->
-							<!--<destFile>${sonar.jacoco.reportPath}</destFile>-->
-							<!--<append>true</append>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-					<!--<execution>-->
-						<!--<id>prepare-agent-it</id>-->
-						<!--<phase>pre-integration-test</phase>-->
-						<!--<goals>-->
-							<!--<goal>prepare-agent-integration</goal>-->
-						<!--</goals>-->
-						<!--<configuration>-->
-							<!--<propertyName>jacoco.agent.it.argLine</propertyName>-->
-							<!--<destFile>${sonar.jacoco.itReportPath}</destFile>-->
-							<!--<append>true</append>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
 			<plugin>
 				<groupId>com.github.veithen.alta</groupId>
 				<artifactId>alta-maven-plugin</artifactId>
