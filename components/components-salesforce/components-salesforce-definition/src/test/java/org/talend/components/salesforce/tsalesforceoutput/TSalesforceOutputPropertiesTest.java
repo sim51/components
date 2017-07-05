@@ -29,7 +29,6 @@ import static org.talend.components.salesforce.tsalesforceoutput.TSalesforceOutp
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +43,6 @@ import org.talend.daikon.avro.SchemaConstants;
 import org.talend.daikon.exception.TalendRuntimeException;
 import org.talend.daikon.properties.PropertiesDynamicMethodHelper;
 import org.talend.daikon.properties.ValidationResult;
-import org.talend.daikon.properties.ValidationResultMutable;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.service.PropertiesService;
 import org.talend.daikon.properties.service.PropertiesServiceImpl;
