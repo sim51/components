@@ -29,6 +29,7 @@ import static org.talend.components.salesforce.tsalesforceoutput.TSalesforceOutp
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,6 +43,8 @@ import org.talend.components.salesforce.SalesforceTestBase;
 import org.talend.daikon.avro.SchemaConstants;
 import org.talend.daikon.exception.TalendRuntimeException;
 import org.talend.daikon.properties.PropertiesDynamicMethodHelper;
+import org.talend.daikon.properties.ValidationResult;
+import org.talend.daikon.properties.ValidationResultMutable;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.service.PropertiesService;
 import org.talend.daikon.properties.service.PropertiesServiceImpl;
@@ -150,8 +153,9 @@ public class TSalesforceOutputPropertiesTest extends SalesforceTestBase {
         }
     }
 
-    @Test(expected = TalendRuntimeException.class)
-    public void testBeforeModuleNameException() throws Throwable {
+    @Test
+    public void testBeforeModuleNameErrorWhenExceptionOccurs() throws Throwable {
+        ValidationResult expectedValidationResult = new ValidationResult(ValidationResult.Result.ERROR, "UNEXPECTED_EXCEPTION:{message=ERROR}");
         properties.init();
 
         try (MockRuntimeSourceOrSinkTestFixture testFixture = new MockRuntimeSourceOrSinkTestFixture(
@@ -161,7 +165,10 @@ public class TSalesforceOutputPropertiesTest extends SalesforceTestBase {
             when(testFixture.runtimeSourceOrSink.getSchemaNames(any(RuntimeContainer.class)))
                     .thenThrow(TalendRuntimeException.createUnexpectedException("ERROR"));
 
-            propertiesService.beforePropertyActivate("moduleName", properties.module);
+            ValidationResult actualValidationResult =  propertiesService.beforePropertyActivate("moduleName", properties.module).getValidationResult();
+
+            assertEquals(expectedValidationResult.getStatus(), actualValidationResult.getStatus());
+            assertEquals(expectedValidationResult.getMessage(), actualValidationResult.getMessage());
         }
     }
 
