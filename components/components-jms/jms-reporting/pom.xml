@@ -45,7 +45,7 @@
                                     <directory>${project.basedir}/..</directory>
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime_1_1/target/jacoco.exec</include>
+                                        <!--<include>${comp.name.prefix}-runtime_1_1/target/jacoco.exec</include>-->
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -64,7 +64,7 @@
                                     <directory>${project.basedir}/..</directory>
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime_1_1/target/jacoco-it.exec</include>
+                                        <!--<include>${comp.name.prefix}-runtime_1_1/target/jacoco-it.exec</include>-->
                                     </includes>
                                 </fileSet>
                             </fileSets>

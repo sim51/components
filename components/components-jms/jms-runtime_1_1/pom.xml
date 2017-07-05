@@ -48,10 +48,6 @@
         <!-- Tests -->
     </dependencies>
 
-    <build>
-        <testSourceDirectory>${project.basedir}/test</testSourceDirectory>
-    </build>
-
     <profiles>
 
         <!--
