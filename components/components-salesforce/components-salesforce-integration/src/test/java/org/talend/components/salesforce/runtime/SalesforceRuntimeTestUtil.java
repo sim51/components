@@ -24,8 +24,10 @@ import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.generic.IndexedRecord;
 import org.junit.Assert;
 import org.talend.components.api.component.runtime.Reader;
+import org.talend.components.api.component.runtime.Result;
 import org.talend.components.api.component.runtime.Sink;
 import org.talend.components.api.component.runtime.Source;
 import org.talend.components.api.component.runtime.SourceOrSink;
@@ -231,7 +233,7 @@ public class SalesforceRuntimeTestUtil {
 
     public void simulateRuntimeCaller(TSalesforceOutputBulkDefinition definition, TSalesforceOutputBulkProperties modelProperties,
             Schema schema, List<Map<String, String>> rows) throws IOException {
-        Writer<?> writer = initWriter(definition, modelProperties);
+        Writer<IndexedRecord, Result> writer = initWriter(definition, modelProperties);
 
         try {
             for (Map<String, String> row : rows) {
@@ -246,7 +248,7 @@ public class SalesforceRuntimeTestUtil {
         }
     }
 
-    private Writer<?> initWriter(TSalesforceOutputBulkDefinition definition, TSalesforceOutputBulkProperties modelProperties)
+    private Writer<IndexedRecord, Result> initWriter(TSalesforceOutputBulkDefinition definition, TSalesforceOutputBulkProperties modelProperties)
             throws IOException {
         // simulate to generate the runtime code
         TSalesforceOutputBulkProperties runtimeProperties = (TSalesforceOutputBulkProperties) definition
@@ -278,7 +280,7 @@ public class SalesforceRuntimeTestUtil {
         Sink sink = (Sink) source_sink;
         WriteOperation<?> writeOperation = sink.createWriteOperation();
         writeOperation.initialize(null);
-        Writer<?> writer = writeOperation.createWriter(null);
+        Writer<IndexedRecord, Result> writer = (Writer<IndexedRecord, Result>) writeOperation.createWriter(null);
         writer.open("component_instance_id");
         return writer;
     }

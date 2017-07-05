@@ -342,8 +342,8 @@ public class SalesforceTestBase extends AbstractComponentTest {
         readAndCheckRows(random, props, 0);
     }
 
-    public static <T> T writeRows(Writer<T> writer, List<IndexedRecord> outputRows) throws IOException {
-        T result;
+    public static Result writeRows(Writer<IndexedRecord, Result> writer, List<IndexedRecord> outputRows) throws IOException {
+        Result result;
         writer.open("foo");
         try {
             for (IndexedRecord row : outputRows) {
@@ -367,7 +367,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
         salesforceSink.initialize(adaptor, props);
         salesforceSink.validate(adaptor);
         SalesforceWriteOperation writeOperation = salesforceSink.createWriteOperation();
-        Writer<Result> saleforceWriter = writeOperation.createWriter(adaptor);
+        Writer<IndexedRecord, Result> saleforceWriter = writeOperation.createWriter(adaptor);
         writeRows(saleforceWriter, outputRows);
     }
     // Returns the rows written (having been re-read so they have their Ids)
@@ -388,7 +388,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
         doWriteRows(deleteProperties, rows);
     }
 
-    public <T> BoundedReader<T> createSalesforceInputReaderFromModule(String moduleName, TSalesforceInputProperties properties) {
+    public BoundedReader<IndexedRecord> createSalesforceInputReaderFromModule(String moduleName, TSalesforceInputProperties properties) {
         if (null == properties) {
             properties = (TSalesforceInputProperties) new TSalesforceInputProperties("foo").init(); //$NON-NLS-1$
         }
@@ -400,7 +400,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
         return createBoundedReader(properties);
     }
 
-    public <T> BoundedReader<T> createBoundedReader(ComponentProperties tsip) {
+    public BoundedReader<IndexedRecord> createBoundedReader(ComponentProperties tsip) {
         SalesforceSource salesforceSource = new SalesforceSource();
         salesforceSource.initialize(null, tsip);
         salesforceSource.validate(null);
@@ -410,7 +410,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
     public static void deleteAllAccountTestRows(String condition) throws Exception {
         TSalesforceInputProperties properties = (TSalesforceInputProperties) new TSalesforceInputProperties("foo").init();
         properties.condition.setValue("Name = '" + condition + "'");
-        BoundedReader<?> salesforceInputReader = new SalesforceTestBase()
+        BoundedReader<IndexedRecord> salesforceInputReader = new SalesforceTestBase()
                 .createSalesforceInputReaderFromModule(EXISTING_MODULE_NAME, properties);
         // getting all rows
 
