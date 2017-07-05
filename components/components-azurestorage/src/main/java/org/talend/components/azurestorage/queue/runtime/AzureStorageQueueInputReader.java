@@ -38,7 +38,7 @@ import org.talend.daikon.i18n.I18nMessages;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.queue.CloudQueueMessage;
 
-public class AzureStorageQueueInputReader extends AzureStorageReader<IndexedRecord> {
+public class AzureStorageQueueInputReader extends AzureStorageReader {
 
     protected String queueName;
 

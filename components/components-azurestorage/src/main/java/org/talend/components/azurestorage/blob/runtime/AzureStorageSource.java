@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.avro.generic.IndexedRecord;
 import org.talend.components.api.component.runtime.BoundedReader;
 import org.talend.components.api.component.runtime.BoundedSource;
 import org.talend.components.api.container.RuntimeContainer;
@@ -56,8 +57,7 @@ public class AzureStorageSource extends AzureStorageSourceOrSink implements Boun
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
-    public BoundedReader createReader(RuntimeContainer container) {
+    public BoundedReader<IndexedRecord> createReader(RuntimeContainer container) {
         //
         // Container operations
         //
