@@ -16,6 +16,7 @@
     <modules>
         <module>jms-definition</module>
         <module>jms-runtime_1_1</module>
+        <module>jms-reporting</module>
     </modules>
 
 </project>

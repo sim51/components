@@ -12,6 +12,11 @@
     <name>Components - Hadoop Cluster Definition</name>
     <packaging>bundle</packaging>
 
+    <properties>
+        <comp.name.prefix>hadoopcluster</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+    </properties>
+
     <dependencies>
 
         <!-- APIs for all Components -->

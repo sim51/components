@@ -2,36 +2,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.talend.components</groupId>
-    <artifactId>components-netsuite-reporting</artifactId>
+    <artifactId>processing-reporting</artifactId>
     <version>0.20.0-SNAPSHOT</version>
-    <name>Components - NetSuite Reporting Module</name>
+    <name>Components - Processing Reporting Module</name>
     <packaging>pom</packaging>
 
     <properties>
         <!-- skip the deployment for reporting, not necessary -->
         <maven.deploy.skip>true</maven.deploy.skip>
-        <comp.name.prefix>components-netsuite</comp.name.prefix>
+        <comp.name.prefix>processing</comp.name.prefix>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-definition</artifactId>
+            <artifactId>processing-definition</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime_2014_2</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime_2016_2</artifactId>
+            <artifactId>processing-runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -56,8 +46,6 @@
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco.exec</include>
                                         <include>${comp.name.prefix}-runtime/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2014_2/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2016_2/target/jacoco.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -77,8 +65,6 @@
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco-it.exec</include>
                                         <include>${comp.name.prefix}-runtime/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2014_2/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2016_2/target/jacoco-it.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>

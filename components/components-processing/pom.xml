@@ -21,5 +21,6 @@
     <modules>
         <module>processing-definition</module>
         <module>processing-runtime</module>
+        <module>processing-reporting</module>
     </modules>
 </project>

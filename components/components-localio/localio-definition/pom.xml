@@ -13,6 +13,11 @@
 	<name>Components - Local IO Definition</name>
 	<packaging>jar</packaging>
 
+	<properties>
+		<comp.name.prefix>localio</comp.name.prefix>
+		<coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.talend.components</groupId>

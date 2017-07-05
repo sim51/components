@@ -2,36 +2,31 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.talend.components</groupId>
-    <artifactId>components-netsuite-reporting</artifactId>
+    <artifactId>elasticsearch-reporting</artifactId>
     <version>0.20.0-SNAPSHOT</version>
-    <name>Components - NetSuite Reporting Module</name>
+    <name>Components - ElasticSearch Reporting Module</name>
     <packaging>pom</packaging>
 
     <properties>
         <!-- skip the deployment for reporting, not necessary -->
         <maven.deploy.skip>true</maven.deploy.skip>
-        <comp.name.prefix>components-netsuite</comp.name.prefix>
+        <comp.name.prefix>elasticsearch</comp.name.prefix>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-definition</artifactId>
+            <artifactId>elasticsearch-definition</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime</artifactId>
+            <artifactId>elasticsearch-runtime_2_4</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime_2014_2</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.talend.components</groupId>
-            <artifactId>components-netsuite-runtime_2016_2</artifactId>
+            <artifactId>elasticsearch-integration</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -55,9 +50,8 @@
                                     <directory>${project.basedir}/..</directory>
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2014_2/target/jacoco.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2016_2/target/jacoco.exec</include>
+                                        <include>${comp.name.prefix}-runtime_2_4/target/jacoco.exec</include>
+                                        <include>${comp.name.prefix}-integration/target/jacoco.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -76,9 +70,8 @@
                                     <directory>${project.basedir}/..</directory>
                                     <includes>
                                         <include>${comp.name.prefix}-definition/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2014_2/target/jacoco-it.exec</include>
-                                        <include>${comp.name.prefix}-runtime_2016_2/target/jacoco-it.exec</include>
+                                        <include>${comp.name.prefix}-runtime_2_4/target/jacoco-it.exec</include>
+                                        <include>${comp.name.prefix}-integration/target/jacoco-it.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>

@@ -16,6 +16,8 @@
     <properties>
         <!-- skip the deployment for integration tests, not necessary -->
         <maven.deploy.skip>true</maven.deploy.skip>
+        <comp.name.prefix>kafka</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>

@@ -13,6 +13,11 @@
     <name>Components - JMS Runtime 1.1</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <comp.name.prefix>jms</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>

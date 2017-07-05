@@ -14,6 +14,11 @@
     <name>Components - Kafka Runtime</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <comp.name.prefix>kafka</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>

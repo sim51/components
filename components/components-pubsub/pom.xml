@@ -18,5 +18,6 @@
         <module>pubsub-definition</module>
         <module>pubsub-runtime</module>
         <module>pubsub-integration</module>
+        <module>pubsub-reporting</module>
     </modules>
 </project>

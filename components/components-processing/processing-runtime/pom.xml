@@ -13,6 +13,11 @@
 
     <name>Components - Processing Runtime</name>
 
+    <properties>
+        <comp.name.prefix>processing</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>

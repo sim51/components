@@ -18,6 +18,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spark.version>1.6.0</spark.version>
         <hadoop.version>2.7.0</hadoop.version>
+        <comp.name.prefix>pubsub</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>
@@ -82,7 +84,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>-Xms512m -Xmx1024m</argLine>
+                    <argLine>-Xms512m -Xmx1024m ${jacoco.agent.it.argLine}</argLine>
                     <systemPropertyVariables>
                         <bigquery.project>${bigquery.project}</bigquery.project>
                         <bigquery.service.account.file>${bigquery.service.account.file}</bigquery.service.account.file>

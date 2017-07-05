@@ -23,5 +23,6 @@
         <module>bigquery-definition</module>
         <module>bigquery-runtime</module>
         <module>bigquery-integration</module>
+        <module>bigquery-reporting</module>
     </modules>
 </project>

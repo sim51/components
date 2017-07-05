@@ -17,6 +17,7 @@
         <module>localio-definition</module>
         <module>localio-runtime</module>
         <module>localio-integration</module>
+        <module>localio-reporting</module>
     </modules>
 
 </project>

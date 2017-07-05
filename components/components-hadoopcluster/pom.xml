@@ -17,6 +17,7 @@
     <modules>
         <module>hadoopcluster-definition</module>
         <module>hadoopcluster-runtime</module>
+        <module>hadoopcluster-reporting</module>
     </modules>
 
 </project>

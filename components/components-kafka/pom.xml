@@ -17,5 +17,6 @@
         <module>kafka-definition</module>
         <module>kafka-runtime</module>
         <module>kafka-integration</module>
+        <module>kafka-reporting</module>
     </modules>
 </project>

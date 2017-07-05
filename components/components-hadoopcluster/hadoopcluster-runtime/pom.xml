@@ -12,6 +12,11 @@
     <name>Components - Hadoop Cluster Runtime</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <comp.name.prefix>hadoopcluster</comp.name.prefix>
+        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+    </properties>
+
     <repositories>
         <repository>
             <id>cdh.repo</id>
@@ -19,6 +24,7 @@
             <name>Cloudera Repository</name>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.talend.components</groupId>
