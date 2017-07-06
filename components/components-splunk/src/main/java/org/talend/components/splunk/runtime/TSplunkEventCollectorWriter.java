@@ -53,7 +53,7 @@ import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
 
-public class TSplunkEventCollectorWriter implements Writer<Result> {
+public class TSplunkEventCollectorWriter implements Writer<IndexedRecord, Result> {
 
     private transient static final Logger LOGGER = LoggerFactory.getLogger(TSplunkEventCollectorWriter.class);
 
@@ -70,8 +70,6 @@ public class TSplunkEventCollectorWriter implements Writer<Result> {
     private int eventsBatchSize;
 
     private TSplunkEventCollectorConnection splunkConnection;
-
-    private IndexedRecordConverter<Object, ? extends IndexedRecord> factory;
 
     private int dataCount;
 
@@ -150,20 +148,18 @@ public class TSplunkEventCollectorWriter implements Writer<Result> {
     }
 
     @Override
-    public void write(Object datum) throws IOException {
-        if (datum == null) {
+    public void write(IndexedRecord record) throws IOException {
+        if (record == null) {
             return;
         } // else handle the data.
-        IndexedRecord input = getFactory(datum).convertToAvro(datum);
-
         SplunkJSONEvent event = SplunkJSONEventBuilder.createEvent();
 
-        for (Schema.Field f : input.getSchema().getFields()) {
+        for (Schema.Field f : record.getSchema().getFields()) {
             Schema.Field defaultField = null;
             if (defaultSchema != null) {
                 defaultField = defaultSchema.getField(f.name());
             }
-            Object inputValue = input.get(f.pos());
+            Object inputValue = record.get(f.pos());
             if (defaultField != null && defaultField.name().equals(SplunkJSONEventField.TIME.getName()) && inputValue != null
                     && inputValue instanceof String) {
                 Object value = GenericAvroRegistry.get().convertToString(defaultField).convertToAvro((String) inputValue);
@@ -228,14 +224,6 @@ public class TSplunkEventCollectorWriter implements Writer<Result> {
         }
         request.setEntity(new StringEntity(requestString.toString()));
         return request;
-    }
-
-    public IndexedRecordConverter<Object, ? extends IndexedRecord> getFactory(Object datum) {
-        if (null == factory) {
-            factory = (IndexedRecordConverter<Object, ? extends IndexedRecord>) new AvroRegistry()
-                    .createIndexedRecordConverter(datum.getClass());
-        }
-        return factory;
     }
 
     @Override

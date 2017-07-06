@@ -41,7 +41,7 @@ public class TSplunkEventCollectorWriteOperation implements WriteOperation<Resul
     }
 
     @Override
-    public Writer<Result> createWriter(RuntimeContainer adaptor) {
+    public TSplunkEventCollectorWriter createWriter(RuntimeContainer adaptor) {
         return new TSplunkEventCollectorWriter(this, sink.getServerUrl(), sink.getToken(), sink.getEventsBatchSize(),
                 sink.getSchema(), adaptor);
     }
