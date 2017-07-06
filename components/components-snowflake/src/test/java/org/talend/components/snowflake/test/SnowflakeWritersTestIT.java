@@ -53,11 +53,11 @@ import org.talend.daikon.properties.test.PropertiesTestUtils;
  */
 public class SnowflakeWritersTestIT extends SnowflakeRuntimeIOTestIT {
 
-    public Writer<Result> createSnowflakeOutputWriter(TSnowflakeOutputProperties props) {
+    public Writer<IndexedRecord, Result> createSnowflakeOutputWriter(TSnowflakeOutputProperties props) {
         SnowflakeSink SnowflakeSink = new SnowflakeSink();
         SnowflakeSink.initialize(container, props);
         SnowflakeWriteOperation writeOperation = SnowflakeSink.createWriteOperation();
-        Writer<Result> writer = writeOperation.createWriter(container);
+        Writer<IndexedRecord, Result> writer = writeOperation.createWriter(container);
         return writer;
     }
 

@@ -266,8 +266,8 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
         assertThat(inputRows, Matchers.containsInAnyOrder(outputRows.toArray()));
     }
 
-    public <T> T writeRows(Writer<T> writer, List<IndexedRecord> outputRows) throws IOException {
-        T result;
+    public Result writeRows(Writer<IndexedRecord, Result> writer, List<IndexedRecord> outputRows) throws IOException {
+        Result result;
         writer.open("foo");
         try {
             for (IndexedRecord row : outputRows) {
@@ -279,8 +279,8 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
         return result;
     }
 
-    public <T> T makeAndWriteRows(Writer<T> writer, int count) throws IOException {
-        T result;
+    public Result makeAndWriteRows(Writer<IndexedRecord, Result> writer, int count) throws IOException {
+        Result result;
         writer.open("foo");
         try {
             for (int i = 0; i < count; i++) {
@@ -294,7 +294,7 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
     }
 
     // Returns the rows written (having been re-read so they have their Ids)
-    protected Writer<Result> makeWriter(SnowflakeConnectionTableProperties props) throws Exception {
+    protected Writer<IndexedRecord, Result> makeWriter(SnowflakeConnectionTableProperties props) throws Exception {
         SnowflakeSink SnowflakeSink = new SnowflakeSink();
         SnowflakeSink.initialize(container, props);
         SnowflakeSink.validate(container);

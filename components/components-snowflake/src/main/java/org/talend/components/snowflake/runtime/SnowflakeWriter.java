@@ -38,14 +38,13 @@ import org.talend.components.snowflake.SnowflakeConnectionProperties;
 import org.talend.components.snowflake.tsnowflakeoutput.TSnowflakeOutputProperties;
 import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.SchemaConstants;
-import org.talend.daikon.avro.converter.IndexedRecordConverter;
 
 import net.snowflake.client.loader.LoaderFactory;
 import net.snowflake.client.loader.LoaderProperty;
 import net.snowflake.client.loader.Operation;
 import net.snowflake.client.loader.StreamLoader;
 
-public final class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord, IndexedRecord> {
+public final class SnowflakeWriter implements WriterWithFeedback<IndexedRecord, Result, IndexedRecord, IndexedRecord> {
 
     private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -76,8 +75,6 @@ public final class SnowflakeWriter implements WriterWithFeedback<Result, Indexed
     private final RuntimeContainer container;
 
     private final TSnowflakeOutputProperties sprops;
-
-    private transient IndexedRecordConverter<Object, ? extends IndexedRecord> factory;
 
     private transient Schema mainSchema;
 
@@ -169,18 +166,12 @@ public final class SnowflakeWriter implements WriterWithFeedback<Result, Indexed
         loader.start();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void write(Object datum) throws IOException {
-        if (null == datum) {
+    public void write(IndexedRecord record) throws IOException {
+        if (null == record) {
             return;
         }
-        if (null == factory) {
-            factory = (IndexedRecordConverter<Object, ? extends IndexedRecord>) SnowflakeAvroRegistry.get()
-                    .createIndexedRecordConverter(datum.getClass());
-        }
-        IndexedRecord input = factory.convertToAvro(datum);
-        List<Schema.Field> fields = input.getSchema().getFields();
+        List<Schema.Field> fields = record.getSchema().getFields();
 
         // input and mainSchema synchronization. Such situation is useful in case of Dynamic
         if (isFirst) {
@@ -197,7 +188,7 @@ public final class SnowflakeWriter implements WriterWithFeedback<Result, Indexed
         for (int i = 0; i < row.length; i++) {
             Field f = collectedFields.get(i);
             Schema s = AvroUtils.unwrapIfNullable(f.schema());
-            Object inputValue = input.get(i);
+            Object inputValue = record.get(i);
             if (null == inputValue || inputValue instanceof String) {
                 row[i] = inputValue;
             } else if (AvroUtils.isSameType(s, AvroUtils._date())) {

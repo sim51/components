@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avro.generic.IndexedRecord;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class SnowflakeWriteOperationTest {
     @Test
     public void testCreateWriter() {
 
-        Writer<?> writer = writeOperation.createWriter(null);
+        Writer<IndexedRecord, Result> writer = writeOperation.createWriter(null);
         Assert.assertTrue(writer instanceof SnowflakeWriter);
     }
 }
