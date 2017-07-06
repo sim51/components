@@ -20,8 +20,7 @@
         <hadoop.aws.version>2.7.3.1-SNAPSHOT</hadoop.aws.version>
         <parquet.version>1.9.0</parquet.version>
         <spark.version>1.6.0</spark.version>
-        <comp.name.prefix>fileio</comp.name.prefix>
-        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+        <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>

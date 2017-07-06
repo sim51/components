@@ -13,8 +13,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <comp.name.prefix>components-jdbc</comp.name.prefix>
-        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+        <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>

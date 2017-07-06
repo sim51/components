@@ -17,8 +17,7 @@
 		<!-- skip the deployment for integration tests, not necessary -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<jetty.version>9.2.19.v20160908</jetty.version>
-		<comp.name.prefix>components-salesforce</comp.name.prefix>
-		<coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+		<coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
 	</properties>
 
 	<dependencies>

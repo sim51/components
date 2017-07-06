@@ -16,8 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <comp.name.prefix>pubsub</comp.name.prefix>
-        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+        <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>

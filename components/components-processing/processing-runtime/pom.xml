@@ -14,8 +14,7 @@
     <name>Components - Processing Runtime</name>
 
     <properties>
-        <comp.name.prefix>processing</comp.name.prefix>
-        <coverage.sonar.reportRoot>${project.basedir}/../${comp.name.prefix}-reporting</coverage.sonar.reportRoot>
+        <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
     <dependencies>
