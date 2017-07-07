@@ -277,6 +277,8 @@ public abstract class NetSuiteOutputWriter<T, RefT> implements WriterWithFeedbac
                 // Normally this should not happen but we need to avoid failure of writer.
                 logger.error("Couldn't parse internalId as Integer: {}", internalId);
             }
+            container.setComponentData(container.getCurrentComponentId(),
+                    NetSuiteOutputDefinition.RETURN_CURRENT_INTERNAL_ID, internalId);
         }
     }
 
