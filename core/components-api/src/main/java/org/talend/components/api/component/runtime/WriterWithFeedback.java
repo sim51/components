@@ -50,6 +50,10 @@ public interface WriterWithFeedback<WriteT, MainT, RejectT> extends Writer<Write
      */
     Iterable<RejectT> getRejectedWrites();
 
-    void cleanFeedbackData();
+    /**
+     * Method to clean lists of successful and rejected writes. This method should be called once the records are
+     * retrieved from the writer in order to prevent duplicates of feedback data processing.
+     */
+    void cleanWrites();
 
 }

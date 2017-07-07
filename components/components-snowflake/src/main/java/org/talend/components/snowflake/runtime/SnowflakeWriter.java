@@ -264,7 +264,7 @@ public final class SnowflakeWriter implements WriterWithFeedback<Result, Indexed
     }
 
     @Override
-    public void cleanFeedbackData() {
+    public void cleanWrites() {
         rejectedWrites.clear();
         successfulWrites.clear();
     }

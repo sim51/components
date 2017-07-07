@@ -303,7 +303,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
     private SaveResult[] doInsert() throws IOException {
         if (insertItems.size() > 0) {
             // Clean the feedback records at each batch write.
-            cleanFeedbackRecords();
+            cleanWrites();
             SObject[] accs = new SObject[insertItems.size()];
             for (int i = 0; i < insertItems.size(); i++)
                 accs[i] = createSObject(insertItems.get(i));
@@ -343,7 +343,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
     private SaveResult[] doUpdate() throws IOException {
         if (updateItems.size() > 0) {
             // Clean the feedback records at each batch write.
-            cleanFeedbackRecords();
+            cleanWrites();
             SObject[] upds = new SObject[updateItems.size()];
             for (int i = 0; i < updateItems.size(); i++)
                 upds[i] = createSObject(updateItems.get(i));
@@ -387,7 +387,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
     private UpsertResult[] doUpsert() throws IOException {
         if (upsertItems.size() > 0) {
             // Clean the feedback records at each batch write.
-            cleanFeedbackRecords();
+            cleanWrites();
             SObject[] upds = new SObject[upsertItems.size()];
             for (int i = 0; i < upsertItems.size(); i++)
                 upds[i] = createSObjectForUpsert(upsertItems.get(i));
@@ -536,7 +536,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
     private DeleteResult[] doDelete() throws IOException {
         if (deleteItems.size() > 0) {
             // Clean the feedback records at each batch write.
-            cleanFeedbackRecords();
+            cleanWrites();
             String[] delIDs = new String[deleteItems.size()];
             String[] changedItemKeys = new String[delIDs.length];
             for (int ix = 0; ix < delIDs.length; ++ix) {
@@ -622,13 +622,10 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
         return Collections.unmodifiableList(rejectedWrites);
     }
 
-    private void cleanFeedbackRecords() {
+    @Override
+    public void cleanWrites() {
         successfulWrites.clear();
         rejectedWrites.clear();
     }
 
-    @Override
-    public void cleanFeedbackData() {
-        cleanFeedbackRecords();
-    }
 }

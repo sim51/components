@@ -328,7 +328,7 @@ abstract public class JDBCOutputWriter implements WriterWithFeedback<Result, Ind
     }
 
     @Override
-    public void cleanFeedbackData() {
+    public void cleanWrites() {
         successfulWrites.clear();
         rejectedWrites.clear();
     }

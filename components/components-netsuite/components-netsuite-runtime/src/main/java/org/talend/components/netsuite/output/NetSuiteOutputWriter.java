@@ -212,7 +212,7 @@ public abstract class NetSuiteOutputWriter<T, RefT> implements WriterWithFeedbac
             return;
         }
 
-        clearWriteFeedback();
+        cleanWrites();
 
         // Transduce IndexedRecords to NetSuite data model objects
 
@@ -280,15 +280,6 @@ public abstract class NetSuiteOutputWriter<T, RefT> implements WriterWithFeedbac
                 logger.error("Couldn't parse internalId as Integer: {}", internalId);
             }
         }
-    }
-
-    /**
-     * Clear accumulated write results.
-     */
-    private void clearWriteFeedback() {
-        writeResponses.clear();
-        successfulWrites.clear();
-        rejectedWrites.clear();
     }
 
     /**
@@ -391,8 +382,10 @@ public abstract class NetSuiteOutputWriter<T, RefT> implements WriterWithFeedbac
     }
 
     @Override
-    public void cleanFeedbackData() {
-        clearWriteFeedback();
+    public void cleanWrites() {
+        writeResponses.clear();
+        successfulWrites.clear();
+        rejectedWrites.clear();
     }
 
 }

@@ -104,7 +104,7 @@ public abstract class MarketoWriter implements WriterWithFeedback<Result, Indexe
     }
 
     @Override
-    public void cleanFeedbackData() {
+    public void cleanWrites() {
         successfulWrites.clear();
         rejectedWrites.clear();
     }

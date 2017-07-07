@@ -173,7 +173,7 @@ public class TFilterRowWriter implements WriterWithFeedback<Result, IndexedRecor
     }
 
     @Override
-    public void cleanFeedbackData() {
+    public void cleanWrites() {
         success.clear();
         reject.clear();
     }
