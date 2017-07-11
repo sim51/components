@@ -12,9 +12,15 @@
 // ============================================================================
 package org.talend.components.pubsub.runtime;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.IndexedRecord;
+import org.apache.avro.io.BinaryEncoder;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.EncoderFactory;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
 import org.apache.beam.sdk.options.PipelineOptions;
@@ -36,10 +42,6 @@ import org.talend.daikon.exception.TalendRuntimeException;
 import org.talend.daikon.exception.error.CommonErrorCodes;
 import org.talend.daikon.properties.ValidationResult;
 
-import com.google.cloud.pubsub.PubSub;
-import com.google.cloud.pubsub.PubSubException;
-import com.google.cloud.pubsub.SubscriptionInfo;
-import com.google.cloud.pubsub.TopicInfo;
 import com.google.common.collect.ImmutableMap;
 
 public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, PDone>
@@ -80,7 +82,11 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
         PubSubDatasetProperties dataset = properties.getDatasetProperties();
         PubSubDatastoreProperties datastore = dataset.getDatastoreProperties();
 
-        createTopicSubscriptionIfNeeded(properties);
+        try {
+            createTopicSubscriptionIfNeeded(properties);
+        } catch (IOException e) {
+            throw TalendRuntimeException.createUnexpectedException(e);
+        }
 
         PubsubIO.Write<PubsubMessage> pubsubWrite = PubsubIO.writeMessages()
                 .to(String.format("projects/%s/topics/%s", datastore.projectName.getValue(), dataset.topic.getValue()));
@@ -94,8 +100,7 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
 
         switch (dataset.valueFormat.getValue()) {
         case CSV: {
-            return  in.apply(MapElements.via(new FormatCsv(dataset.fieldDelimiter.getValue())))
-                    .apply(pubsubWrite);
+            return in.apply(MapElements.via(new FormatCsv(dataset.fieldDelimiter.getValue()))).apply(pubsubWrite);
         }
         case AVRO: {
             return in.apply(MapElements.via(new FormatAvro())).apply(pubsubWrite);
@@ -106,39 +111,33 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
 
     }
 
-    private void createTopicSubscriptionIfNeeded(PubSubOutputProperties properties) {
+    private void createTopicSubscriptionIfNeeded(PubSubOutputProperties properties) throws IOException {
         PubSubOutputProperties.TopicOperation topicOperation = properties.topicOperation.getValue();
         if (topicOperation == PubSubOutputProperties.TopicOperation.NONE) {
             return;
         }
-        PubSubDatasetProperties dataset = properties.getDatasetProperties();
+        validateForCreateTopic();
 
-        validateForCreateTopic(dataset);
-
-        PubSub client = PubSubConnection.createClient(dataset.getDatastoreProperties());
+        PubSubClient client = PubSubConnection.createClient(datastore);
 
         if (topicOperation == PubSubOutputProperties.TopicOperation.DROP_IF_EXISTS_AND_CREATE) {
-            dropTopic(client, dataset);
+            dropTopic(client);
         }
 
-        createTopic(client, dataset);
+        createTopic(client);
     }
 
-    private void createTopic(PubSub client, PubSubDatasetProperties dataset) {
-        try {
-            client.create(TopicInfo.of(dataset.topic.getValue()));
-        } catch (PubSubException e) {
-            // ignore. no check before create, so the topic may exists
-        }
-        client.create(SubscriptionInfo.of(dataset.topic.getValue(), dataset.subscription.getValue()));
+    private void createTopic(PubSubClient client) throws IOException {
+        client.createTopic(dataset.topic.getValue());
+        client.createSubscription(dataset.topic.getValue(), dataset.subscription.getValue());
     }
 
-    private void dropTopic(PubSub client, PubSubDatasetProperties dataset) {
+    private void dropTopic(PubSubClient client) throws IOException {
         client.deleteSubscription(dataset.subscription.getValue());
         client.deleteTopic(dataset.topic.getValue());
     }
 
-    private void validateForCreateTopic(PubSubDatasetProperties dataset) {
+    private void validateForCreateTopic() {
         if (dataset.subscription.getValue() == null || "".equals(dataset.subscription.getValue())) {
             TalendRuntimeException.build(CommonErrorCodes.UNEXPECTED_EXCEPTION)
                     .setAndThrow("Subscription required when create topic");
@@ -168,7 +167,7 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
             }
             byte[] bytes = sb.toString().getBytes(Charset.forName("UTF-8"));
             sb.setLength(0);
-            return new PubsubMessage(bytes, ImmutableMap.<String, String>of());
+            return new PubsubMessage(bytes, ImmutableMap.<String, String> of());
         }
     }
 
@@ -190,7 +189,18 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
 
         @Override
         public PubsubMessage apply(IndexedRecord input) {
-            return new PubsubMessage(new byte[0], ImmutableMap.<String, String>of());
+            try {
+                DatumWriter<IndexedRecord> datumWriter = new GenericDatumWriter(input.getSchema());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(out, null);
+                datumWriter.write(input, encoder);
+                encoder.flush();
+                byte[] result = out.toByteArray();
+                out.close();
+                return new PubsubMessage(result, ImmutableMap.<String, String> of());
+            } catch (IOException e) {
+                throw TalendRuntimeException.createUnexpectedException(e);
+            }
         }
     }
 }
