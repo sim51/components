@@ -29,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.talend.components.adapter.beam.BeamJobRuntimeContainer;
 import org.talend.components.adapter.beam.transform.ConvertToIndexedRecord;
 import org.talend.components.pubsub.PubSubDatasetProperties;
 import org.talend.components.pubsub.PubSubDatastoreProperties;
@@ -48,16 +49,18 @@ public class PubSubInputRuntimeTestIT {
     final static String subscriptionName = "tcomp-pubsub-inputtest-sub1" + uuid;
 
     static PubSub client = PubSubConnection.createClient(createDatastore());
-    static Pipeline sparkPipeline;
 
-    static {
-        JavaSparkContext jsc = new JavaSparkContext("local[2]", "PubSubInput");
+    private final JavaSparkContext jsc = new JavaSparkContext("local[2]", "PubSubInput");
+
+    // TODO extract this to utils
+    private Pipeline createSparkRunnerPipeline() {
         PipelineOptions o = PipelineOptionsFactory.create();
         SparkContextOptions options = o.as(SparkContextOptions.class);
         options.setProvidedSparkContext(jsc);
         options.setUsesProvidedSparkContext(true);
         options.setRunner(SparkRunner.class);
-        sparkPipeline = Pipeline.create(options);
+        runtimeContainer = new BeamJobRuntimeContainer(options);
+        return Pipeline.create(options);
     }
 
     @Rule
@@ -65,6 +68,7 @@ public class PubSubInputRuntimeTestIT {
     Integer maxRecords = 10;
     PubSubDatastoreProperties datastoreProperties;
     PubSubDatasetProperties datasetProperties;
+    BeamJobRuntimeContainer runtimeContainer;
 
     @BeforeClass
     public static void initTopic() {
@@ -83,6 +87,7 @@ public class PubSubInputRuntimeTestIT {
     public void init() {
         datastoreProperties = createDatastore();
         datasetProperties = createDataset(datastoreProperties, topicName);
+        runtimeContainer = new BeamJobRuntimeContainer(pipeline.getOptions());
     }
 
     @Test
@@ -102,7 +107,7 @@ public class PubSubInputRuntimeTestIT {
         client.publish(topicName, messages);
 
         PubSubInputRuntime inputRuntime = new PubSubInputRuntime();
-        inputRuntime.initialize(null, createInput(
+        inputRuntime.initialize(runtimeContainer, createInput(
                 addSubscriptionForDataset(createDatasetFromCSV(createDatastore(), topicName, fieldDelimited), subscriptionName),
                 null, maxRecords));
 
@@ -121,7 +126,7 @@ public class PubSubInputRuntimeTestIT {
     @Ignore("Can not run together with inputAvro_Spark, JavaSparkContext can't modify in same jvm"
             + " error, or PAssert check with wrong data issue")
     public void inputCsv_Spark() {
-        inputCsv(sparkPipeline);
+        inputCsv(createSparkRunnerPipeline());
     }
 
     @Test
@@ -131,7 +136,7 @@ public class PubSubInputRuntimeTestIT {
 
     @Test
     public void inputAvro_Spark() throws IOException {
-        inputAvro(sparkPipeline);
+        inputAvro(createSparkRunnerPipeline());
     }
 
     private void inputAvro(Pipeline pipeline) throws IOException {
@@ -146,7 +151,7 @@ public class PubSubInputRuntimeTestIT {
 
         PubSubInputRuntime inputRuntime = new PubSubInputRuntime();
         inputRuntime
-                .initialize(null,
+                .initialize(runtimeContainer,
                         createInput(addSubscriptionForDataset(
                                 createDatasetFromAvro(createDatastore(), topicName, Person.schema.toString()), subscriptionName),
                                 null, maxRecords));

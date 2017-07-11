@@ -17,12 +17,16 @@ import java.nio.charset.Charset;
 import org.apache.avro.generic.IndexedRecord;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PDone;
+import org.talend.components.adapter.beam.BeamJobRuntimeContainer;
+import org.talend.components.adapter.beam.gcp.GcpServiceAccountOptions;
+import org.talend.components.adapter.beam.gcp.ServiceAccountCredentialFactory;
 import org.talend.components.api.component.runtime.RuntimableRuntime;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.pubsub.PubSubDatasetProperties;
@@ -46,9 +50,28 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
      */
     private PubSubOutputProperties properties;
 
+    private PubSubDatasetProperties dataset = null;
+
+    private PubSubDatastoreProperties datastore = null;
+
     @Override
     public ValidationResult initialize(RuntimeContainer container, PubSubOutputProperties properties) {
         this.properties = properties;
+        this.dataset = properties.getDatasetProperties();
+        this.datastore = dataset.getDatastoreProperties();
+
+        Object pipelineOptionsObj = container.getGlobalData(BeamJobRuntimeContainer.PIPELINE_OPTIONS);
+        if (pipelineOptionsObj != null) {
+            PipelineOptions pipelineOptions = (PipelineOptions) pipelineOptionsObj;
+            GcpServiceAccountOptions gcpOptions = pipelineOptions.as(GcpServiceAccountOptions.class);
+            gcpOptions.setProject(datastore.projectName.getValue());
+            if (datastore.serviceAccountFile.getValue() != null) {
+                gcpOptions.setCredentialFactoryClass(ServiceAccountCredentialFactory.class);
+                gcpOptions.setServiceAccountFile(datastore.serviceAccountFile.getValue());
+                gcpOptions.setGcpCredential(PubSubConnection.createCredentials(datastore));
+            }
+        }
+
         return ValidationResult.OK;
     }
 
@@ -56,14 +79,6 @@ public class PubSubOutputRuntime extends PTransform<PCollection<IndexedRecord>, 
     public PDone expand(PCollection<IndexedRecord> in) {
         PubSubDatasetProperties dataset = properties.getDatasetProperties();
         PubSubDatastoreProperties datastore = dataset.getDatastoreProperties();
-
-//        GcpServiceAccountOptions gcpOptions = in.getPipeline().getOptions().as(GcpServiceAccountOptions.class);
-//        gcpOptions.setProject(datastore.projectName.getValue());
-//        if (datastore.serviceAccountFile.getValue() != null) {
-//            gcpOptions.setCredentialFactoryClass(ServiceAccountCredentialFactory.class);
-//            gcpOptions.setServiceAccountFile(datastore.serviceAccountFile.getValue());
-//            gcpOptions.setGcpCredential(PubSubConnection.createCredentials(datastore));
-//        }
 
         createTopicSubscriptionIfNeeded(properties);
 

@@ -15,7 +15,6 @@ package org.talend.components.pubsub.runtime;
 import java.io.IOException;
 import java.util.Iterator;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
@@ -26,6 +25,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubMessage;
+import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
@@ -33,7 +33,10 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PBegin;
 import org.apache.beam.sdk.values.PCollection;
 import org.joda.time.Instant;
+import org.talend.components.adapter.beam.BeamJobRuntimeContainer;
 import org.talend.components.adapter.beam.coders.LazyAvroCoder;
+import org.talend.components.adapter.beam.gcp.GcpServiceAccountOptions;
+import org.talend.components.adapter.beam.gcp.ServiceAccountCredentialFactory;
 import org.talend.components.adapter.beam.transform.ConvertToIndexedRecord;
 import org.talend.components.api.component.runtime.RuntimableRuntime;
 import org.talend.components.api.container.RuntimeContainer;
@@ -44,6 +47,7 @@ import org.talend.daikon.properties.ValidationResult;
 
 import com.google.cloud.pubsub.PubSub;
 import com.google.cloud.pubsub.ReceivedMessage;
+import com.google.common.collect.ImmutableMap;
 
 public class PubSubInputRuntime extends PTransform<PBegin, PCollection<IndexedRecord>>
         implements RuntimableRuntime<PubSubInputProperties> {
@@ -53,37 +57,43 @@ public class PubSubInputRuntime extends PTransform<PBegin, PCollection<IndexedRe
      */
     private PubSubInputProperties properties = null;
 
+    private PubSubDatasetProperties dataset = null;
+
+    private PubSubDatastoreProperties datastore = null;
+
     @Override
     public ValidationResult initialize(RuntimeContainer container, PubSubInputProperties properties) {
         this.properties = properties;
+        this.dataset = properties.getDatasetProperties();
+        this.datastore = dataset.getDatastoreProperties();
+
+        Object pipelineOptionsObj = container.getGlobalData(BeamJobRuntimeContainer.PIPELINE_OPTIONS);
+        if (pipelineOptionsObj != null) {
+            PipelineOptions pipelineOptions = (PipelineOptions) pipelineOptionsObj;
+            GcpServiceAccountOptions gcpOptions = pipelineOptions.as(GcpServiceAccountOptions.class);
+            gcpOptions.setProject(datastore.projectName.getValue());
+            if (datastore.serviceAccountFile.getValue() != null) {
+                gcpOptions.setCredentialFactoryClass(ServiceAccountCredentialFactory.class);
+                gcpOptions.setServiceAccountFile(datastore.serviceAccountFile.getValue());
+                gcpOptions.setGcpCredential(PubSubConnection.createCredentials(datastore));
+            }
+        }
         return ValidationResult.OK;
     }
 
     @Override
     public PCollection<IndexedRecord> expand(PBegin in) {
-        PubSubDatasetProperties dataset = properties.getDatasetProperties();
-        PubSubDatastoreProperties datastore = dataset.getDatastoreProperties();
-
         PCollection<PubsubMessage> pubsubMessages = null;
-
         if (properties.noACK.getValue()) {// getSample
             pubsubMessages = in.apply(Create.of(dataset.subscription.getValue())).apply(ParDo.of(new SampleFn(properties)));
         } else {// normal
-//            GcpServiceAccountOptions gcpOptions = in.getPipeline().getOptions().as(GcpServiceAccountOptions.class);
-//            gcpOptions.setProject(datastore.projectName.getValue());
-//            if (datastore.serviceAccountFile.getValue() != null) {
-//                gcpOptions.setCredentialFactoryClass(ServiceAccountCredentialFactory.class);
-//                gcpOptions.setServiceAccountFile(datastore.serviceAccountFile.getValue());
-//                gcpOptions.setGcpCredential(PubSubConnection.createCredentials(datastore));
-//            }
-
-            PubsubIO.Read<PubsubMessage> pubsubRead = PubsubIO.readMessages().fromSubscription(String.format("projects/%s/subscriptions/%s",
-                    datastore.projectName.getValue(), dataset.subscription.getValue()));
+            PubsubIO.Read<PubsubMessage> pubsubRead = PubsubIO.readMessages().fromSubscription(String
+                    .format("projects/%s/subscriptions/%s", datastore.projectName.getValue(), dataset.subscription.getValue()));
             if (properties.useMaxReadTime.getValue()) {
-//                pubsubRead = pubsubRead.maxReadTime(new Duration(properties.maxReadTime.getValue()));
+                // pubsubRead = pubsubRead.maxReadTime(new Duration(properties.maxReadTime.getValue()));
             }
             if (properties.useMaxNumRecords.getValue()) {
-//                pubsubRead = pubsubRead.maxNumRecords(properties.maxNumRecords.getValue());
+                // pubsubRead = pubsubRead.maxNumRecords(properties.maxNumRecords.getValue());
             }
 
             if (properties.idLabel.getValue() != null && !"".equals(properties.idLabel.getValue())) {
@@ -176,7 +186,7 @@ public class PubSubInputRuntime extends PTransform<PBegin, PCollection<IndexedRe
                 Iterator<ReceivedMessage> messageIterator = client.pull(context.element(), maxNum);
                 while (messageIterator.hasNext()) {
                     ReceivedMessage next = messageIterator.next();
-                    context.output(new PubsubMessage(next.getPayload().toByteArray(), ImmutableMap.<String, String>of()));
+                    context.output(new PubsubMessage(next.getPayload().toByteArray(), ImmutableMap.<String, String> of()));
                     // no next.ack() for getSample, if call ack then the message will be removed
                     num++;
                     if (num >= maxNum) {

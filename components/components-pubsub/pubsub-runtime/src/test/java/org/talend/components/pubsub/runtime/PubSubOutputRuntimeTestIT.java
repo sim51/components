@@ -35,6 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.talend.components.adapter.beam.BeamJobRuntimeContainer;
 import org.talend.components.adapter.beam.coders.LazyAvroCoder;
 import org.talend.components.adapter.beam.transform.ConvertToIndexedRecord;
 import org.talend.components.pubsub.PubSubDatasetProperties;
@@ -69,6 +70,8 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
 
     PubSubDatasetProperties datasetProperties;
 
+    BeamJobRuntimeContainer runtimeContainer;
+
     @BeforeClass
     public static void initTopic() {
         client.create(TopicInfo.of(topicName));
@@ -86,6 +89,7 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
     public void init() {
         datastoreProperties = createDatastore();
         datasetProperties = createDataset(datastoreProperties, topicName);
+        runtimeContainer = new BeamJobRuntimeContainer(pipeline.getOptions());
     }
 
     @Test
@@ -101,7 +105,7 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
         options.setProvidedSparkContext(jsc);
         options.setUsesProvidedSparkContext(true);
         options.setRunner(SparkRunner.class);
-
+        runtimeContainer = new BeamJobRuntimeContainer(options);
         return Pipeline.create(options);
     }
 
@@ -124,7 +128,7 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
         }
 
         PubSubOutputRuntime outputRuntime = new PubSubOutputRuntime();
-        outputRuntime.initialize(null, createOutput(createDatasetFromCSV(createDatastore(), topicName, fieldDelimited)));
+        outputRuntime.initialize(runtimeContainer, createOutput(createDatasetFromCSV(createDatastore(), topicName, fieldDelimited)));
 
         PCollection<IndexedRecord> records = (PCollection<IndexedRecord>) pipeline.apply(Create.of(sendMessages))
                 .apply((PTransform) ConvertToIndexedRecord.of());
@@ -172,7 +176,7 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
         }
 
         PubSubOutputRuntime outputRuntime = new PubSubOutputRuntime();
-        outputRuntime.initialize(null,
+        outputRuntime.initialize(runtimeContainer,
                 createOutput(createDatasetFromAvro(createDatastore(), topicName, Person.schema.toString())));
 
         PCollection<IndexedRecord> output = (PCollection<IndexedRecord>) pipeline
@@ -228,7 +232,7 @@ public class PubSubOutputRuntimeTestIT implements Serializable {
         PubSubOutputProperties outputProperties = createOutput(
                 addSubscriptionForDataset(createDatasetFromCSV(createDatastore(), newTopicName, fieldDelimited), newSubName));
         outputProperties.topicOperation.setValue(PubSubOutputProperties.TopicOperation.CREATE_IF_NOT_EXISTS);
-        outputRuntime.initialize(null, outputProperties);
+        outputRuntime.initialize(runtimeContainer, outputProperties);
 
         PCollection<IndexedRecord> records = (PCollection<IndexedRecord>) pipeline.apply(Create.of(sendMessages))
                 .apply((PTransform) ConvertToIndexedRecord.of());
