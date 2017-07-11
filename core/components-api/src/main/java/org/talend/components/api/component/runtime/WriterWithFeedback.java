@@ -51,8 +51,13 @@ public interface WriterWithFeedback<WriteT, MainT, RejectT> extends Writer<Write
     Iterable<RejectT> getRejectedWrites();
 
     /**
-     * Method to clean lists of successful and rejected writes. This method should be called once the records are
-     * retrieved from the writer in order to prevent duplicates of feedback data processing.
+     * Cleans successful and rejected writes.</br>
+     * 
+     * <p>This method should be called right after {@link #getSuccessfulWrites()} and {@link #getRejectedWrites()} were called
+     * and before next call to {@link #write(Object)} to avoid duplicates of feedback data processing.</br>
+     * Subsequent calls to {@link #getSuccessfulWrites()} and {@link #getRejectedWrites()} should return empty {@link Iterable}
+     * until next batch of writes will be ready. Next batch will be ready after several calls to {@link #write(Object)}.
+     * Exact number of calls depends on "batch size" component property</p> 
      */
     void cleanWrites();
 
