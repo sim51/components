@@ -30,6 +30,7 @@ import org.talend.components.marketo.runtime.MarketoSourceOrSinkRuntime;
 import org.talend.daikon.properties.PresentationItem;
 import org.talend.daikon.properties.Properties;
 import org.talend.daikon.properties.ValidationResult;
+import org.talend.daikon.properties.ValidationResult.Result;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.presentation.Widget;
 import org.talend.daikon.properties.property.Property;
@@ -176,29 +177,37 @@ public class TMarketoConnectionProperties extends ComponentPropertiesImpl implem
     }
 
     public ValidationResult validateTestConnection() {
-        SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
-        MarketoSourceOrSinkRuntime sos = (MarketoSourceOrSinkRuntime) sandboxedInstance.getInstance();
-        sos.initialize(null, this);
-        ValidationResult vr = sos.validateConnection(this);
-        if (vr.getStatus() == ValidationResult.Result.OK) {
-            getForm(FORM_WIZARD).setAllowForward(true);
-            getForm(FORM_WIZARD).setAllowFinish(true);
-        } else {
-            getForm(FORM_WIZARD).setAllowForward(false);
+        try {
+            SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
+            MarketoSourceOrSinkRuntime sos = (MarketoSourceOrSinkRuntime) sandboxedInstance.getInstance();
+            sos.initialize(null, this);
+            ValidationResult vr = sos.validateConnection(this);
+            if (vr.getStatus() == ValidationResult.Result.OK) {
+                getForm(FORM_WIZARD).setAllowForward(true);
+                getForm(FORM_WIZARD).setAllowFinish(true);
+            } else {
+                getForm(FORM_WIZARD).setAllowForward(false);
+            }
+            return vr;
+        } catch (Exception e) {
+            return new ValidationResult(Result.ERROR, e.getMessage());
         }
-        return vr;
     }
 
     public ValidationResult afterFormFinishWizard(Repository<Properties> repo) {
-        SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
-        MarketoSourceOrSinkRuntime sos = (MarketoSourceOrSinkRuntime) sandboxedInstance.getInstance();
-        sos.initialize(null, this);
-        ValidationResult vr = sos.validateConnection(this);
-        if (vr.getStatus() != ValidationResult.Result.OK) {
-            return vr;
+        try {
+            SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
+            MarketoSourceOrSinkRuntime sos = (MarketoSourceOrSinkRuntime) sandboxedInstance.getInstance();
+            sos.initialize(null, this);
+            ValidationResult vr = sos.validateConnection(this);
+            if (vr.getStatus() != ValidationResult.Result.OK) {
+                return vr;
+            }
+            repo.storeProperties(this, this.name.getValue(), repositoryLocation, null);
+            return ValidationResult.OK;
+        } catch (Exception e) {
+            return new ValidationResult(Result.ERROR, e.getMessage());
         }
-        repo.storeProperties(this, this.name.getValue(), repositoryLocation, null);
-        return ValidationResult.OK;
     }
 
     @Override

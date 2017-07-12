@@ -79,12 +79,12 @@ public abstract class MarketoComponentDefinition extends AbstractComponentDefini
 
     public static RuntimeInfo getCommonRuntimeInfo(ClassLoader classLoader, String clazz) {
         return new SimpleRuntimeInfo(classLoader,
-                DependenciesReader.computeDependenciesFilePath(MAVEN_GROUP_ID, MAVEN_ARTIFACT_ID), clazz);
+                DependenciesReader.computeDependenciesFilePath(MAVEN_GROUP_ID, MAVEN_RUNTIME_ARTIFACT_ID), clazz);
     }
 
     public static RuntimeInfo getCommonRuntimeInfo(String clazz) {
-        return new JarRuntimeInfo(MAVEN_PATH, DependenciesReader.computeDependenciesFilePath(MAVEN_GROUP_ID, MAVEN_ARTIFACT_ID),
-                clazz);
+        return new JarRuntimeInfo(MAVEN_RUNTIME_PATH,
+                DependenciesReader.computeDependenciesFilePath(MAVEN_GROUP_ID, MAVEN_RUNTIME_ARTIFACT_ID), clazz);
     }
 
     public static class SandboxedInstanceProvider {

@@ -47,9 +47,9 @@ public class TMarketoInputDefinition extends MarketoComponentDefinition {
         assertConnectorTopologyCompatibility(connectorTopology);
         if (ConnectorTopology.INCOMING.equals(connectorTopology)
                 || ConnectorTopology.INCOMING_AND_OUTGOING.equals(connectorTopology)) {
-            return getCommonRuntimeInfo(this.getClass().getClassLoader(), RUNTIME_SINK_CLASS);
+            return getCommonRuntimeInfo(RUNTIME_SINK_CLASS);
         } else {
-            return getCommonRuntimeInfo(this.getClass().getClassLoader(), RUNTIME_SOURCE_CLASS);
+            return getCommonRuntimeInfo(RUNTIME_SOURCE_CLASS);
         }
     }
 

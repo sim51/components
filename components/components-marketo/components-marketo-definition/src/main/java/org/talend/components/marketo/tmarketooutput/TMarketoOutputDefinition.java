@@ -55,7 +55,7 @@ public class TMarketoOutputDefinition extends MarketoComponentDefinition {
     public RuntimeInfo getRuntimeInfo(ExecutionEngine engine, ComponentProperties props, ConnectorTopology connectorTopology) {
         assertEngineCompatibility(engine);
         assertConnectorTopologyCompatibility(connectorTopology);
-        return getCommonRuntimeInfo(this.getClass().getClassLoader(), RUNTIME_SINK_CLASS);
+        return getCommonRuntimeInfo(RUNTIME_SINK_CLASS);
     }
 
     @Override

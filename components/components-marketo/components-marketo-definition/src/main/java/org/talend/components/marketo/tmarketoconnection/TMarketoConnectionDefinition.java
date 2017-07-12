@@ -48,7 +48,7 @@ public class TMarketoConnectionDefinition extends MarketoComponentDefinition {
             ConnectorTopology connectorTopology) {
         assertEngineCompatibility(engine);
         if (connectorTopology == ConnectorTopology.NONE) {
-            return getCommonRuntimeInfo(this.getClass().getClassLoader(), RUNTIME_SOURCEORSINK_CLASS);
+            return getCommonRuntimeInfo(RUNTIME_SOURCEORSINK_CLASS);
         } else {
             return null;
         }
