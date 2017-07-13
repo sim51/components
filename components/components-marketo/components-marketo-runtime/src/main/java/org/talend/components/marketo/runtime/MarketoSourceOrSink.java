@@ -60,8 +60,6 @@ public class MarketoSourceOrSink implements SourceOrSink, MarketoSourceOrSinkRun
     public static final String RESOURCE_OPPORTUNITY = "resourceOpportunity";
 
     public static final String RESOURCE_OPPORTUNITY_ROLE = "resourceOpportunityRole";
-    
-    public static final String TALEND6_DYNAMIC_COLUMN_POSITION = "di.dynamic.column.position";
 
     public static final String TALEND6_DYNAMIC_COLUMN_POSITION = "di.dynamic.column.position";
 
