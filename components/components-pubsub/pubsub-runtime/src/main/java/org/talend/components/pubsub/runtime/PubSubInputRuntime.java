@@ -183,24 +183,18 @@ public class PubSubInputRuntime extends PTransform<PBegin, PCollection<IndexedRe
         public void processElement(ProcessContext context) {
             int num = 0;
             Instant endTime = Instant.now().plus(maxTime);
-            while (true) {
+            while (num < maxNum && Instant.now().isBefore(endTime)) {
                 try {
                     List<String> ackIds = new ArrayList<>();
                     for (ReceivedMessage receivedMessage : client.pull(spec.getDatasetProperties().subscription.getValue(),
-                            maxNum)) {
+                            maxNum - num)) {
                         context.output(
                                 new PubsubMessage(receivedMessage.getMessage().decodeData(), ImmutableMap.<String, String> of()));
                         ackIds.add(receivedMessage.getAckId());
                         num++;
-                        if (num >= maxNum) {
-                            break;
-                        }
                     }
-                    if (ack) { // for getSample, if call ack then the message will be removed
+                    if (ack && !ackIds.isEmpty()) { // do not call this when getSample, else the message will be removed
                         client.ack(spec.getDatasetProperties().subscription.getValue(), ackIds);
-                    }
-                    if (Instant.now().isAfter(endTime)) {
-                        break;
                     }
                 } catch (IOException e) {
                     throw TalendRuntimeException.createUnexpectedException(e);
