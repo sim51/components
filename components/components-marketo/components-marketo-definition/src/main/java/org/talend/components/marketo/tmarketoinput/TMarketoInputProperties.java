@@ -430,7 +430,7 @@ public class TMarketoInputProperties extends MarketoComponentWizardBasePropertie
         mainForm.addRow(dieOnError);
 
         //
-        Form selectLeadSchemaForm = new Form(this, "fetchLeadSchema");
+        Form selectLeadSchemaForm = new Form(this, FORM_FETCH_LEAD_SCHEMA);
         selectLeadSchemaForm.addRow(widget(selectedLeadColumns).setWidgetType(Widget.NAME_SELECTION_AREA_WIDGET_TYPE));
         fetchLeadSchema.setFormtoShow(selectLeadSchemaForm);
     }
@@ -722,6 +722,17 @@ public class TMarketoInputProperties extends MarketoComponentWizardBasePropertie
 
     public void afterListParam() {
         refreshLayout(getForm(Form.MAIN));
+    }
+
+    @Override
+    public void beforeFormPresentFetchLeadSchema() throws IOException {
+        try {
+            getForm(FORM_FETCH_LEAD_SCHEMA).setSubtitle(messages.getMessage("form.fetchLeadSchema.subtitle"));
+            super.beforeFormPresentFetchLeadSchema();
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+            getForm(FORM_FETCH_LEAD_SCHEMA).setSubtitle(e.getMessage());
+        }
     }
 
     @Override

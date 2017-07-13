@@ -34,14 +34,19 @@ import org.slf4j.LoggerFactory;
 import org.talend.components.api.component.PropertyPathConnector;
 import org.talend.components.marketo.MarketoComponentProperties;
 import org.talend.components.marketo.MarketoUtils;
+import org.talend.components.marketo.runtime.MarketoSourceOrSinkRuntime;
 import org.talend.components.marketo.runtime.MarketoSourceOrSinkSchemaProvider;
 import org.talend.daikon.NamedThing;
 import org.talend.daikon.SimpleNamedThing;
 import org.talend.daikon.properties.PresentationItem;
+import org.talend.daikon.properties.ValidationResult;
+import org.talend.daikon.properties.ValidationResult.Result;
 import org.talend.daikon.properties.property.Property;
 import org.talend.daikon.sandbox.SandboxedInstance;
 
 public class MarketoComponentWizardBaseProperties extends MarketoComponentProperties {
+
+    public static final String FORM_FETCH_LEAD_SCHEMA = "fetchLeadSchema";
 
     public Property<String> customObjectName = newString("customObjectName").setRequired();
 
@@ -74,34 +79,34 @@ public class MarketoComponentWizardBaseProperties extends MarketoComponentProper
 
     public void beforeFormPresentFetchLeadSchema() throws IOException {
         List<NamedThing> cols = new ArrayList<>();
-        try {
-            if (allAvailableleadFields.isEmpty()) {
-                SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
-                MarketoSourceOrSinkSchemaProvider sos = (MarketoSourceOrSinkSchemaProvider) sandboxedInstance.getInstance();
-                sos.initialize(null, this);
-                for (Field f : sos.getAllLeadFields()) {
-                    allAvailableleadFields.put(f.name(), f);
-                }
+        if (allAvailableleadFields.isEmpty()) {
+            SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
+            MarketoSourceOrSinkSchemaProvider sos = (MarketoSourceOrSinkSchemaProvider) sandboxedInstance.getInstance();
+            sos.initialize(null, this);
+            ValidationResult vr = ((MarketoSourceOrSinkRuntime) sos).validateConnection(this);
+            if (!Result.OK.equals(vr.getStatus())) {
+                throw new IOException(vr.getMessage());
             }
-            SimpleNamedThing snt;
-            // add current fields in schema
-            List<NamedThing> currentSchema = new ArrayList<>();
-            for (Field f : schemaInput.schema.getValue().getFields()) {
-                snt = new SimpleNamedThing(f.name(), f.name());
-                cols.add(snt);
-                currentSchema.add(snt);
+            for (Field f : sos.getAllLeadFields()) {
+                allAvailableleadFields.put(f.name(), f);
             }
-            for (String f : allAvailableleadFields.keySet()) {
-                snt = new SimpleNamedThing(f, f);
-                if (!cols.contains(snt)) {
-                    cols.add(snt);
-                }
-            }
-            selectedLeadColumns.setPossibleValues(cols);
-            selectedLeadColumns.setValue(currentSchema);
-        } catch (RuntimeException | IOException e) {
-            LOG.error(e.getMessage());
         }
+        SimpleNamedThing snt;
+        // add current fields in schema
+        List<NamedThing> currentSchema = new ArrayList<>();
+        for (Field f : schemaInput.schema.getValue().getFields()) {
+            snt = new SimpleNamedThing(f.name(), f.name());
+            cols.add(snt);
+            currentSchema.add(snt);
+        }
+        for (String f : allAvailableleadFields.keySet()) {
+            snt = new SimpleNamedThing(f, f);
+            if (!cols.contains(snt)) {
+                cols.add(snt);
+            }
+        }
+        selectedLeadColumns.setPossibleValues(cols);
+        selectedLeadColumns.setValue(currentSchema);
     }
 
     public void afterFetchLeadSchema() {
