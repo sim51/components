@@ -157,5 +157,14 @@ public class JDBCConnectionTestIT {
             Assert.fail(e.getMessage());
         }
     }
+    
+    @Test
+    public void testEliminateSpaceURL(){
+        TJDBCConnectionDefinition definition = new TJDBCConnectionDefinition();
+        TJDBCConnectionProperties properties = DBTestUtils.createCommonJDBCConnectionProperties(allSetting, definition);
+        properties.connection.jdbcUrl.setValue("a value with space in it.");
+        AllSetting setting = properties.getRuntimeSetting();
+        assertTrue("avaluewithspaceinit.".equals(setting.getJdbcUrl()));
+    }
 
 }
