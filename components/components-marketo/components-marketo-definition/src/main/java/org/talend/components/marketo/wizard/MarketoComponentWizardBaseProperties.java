@@ -79,17 +79,15 @@ public class MarketoComponentWizardBaseProperties extends MarketoComponentProper
 
     public void beforeFormPresentFetchLeadSchema() throws IOException {
         List<NamedThing> cols = new ArrayList<>();
-        if (allAvailableleadFields.isEmpty()) {
-            SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
-            MarketoSourceOrSinkSchemaProvider sos = (MarketoSourceOrSinkSchemaProvider) sandboxedInstance.getInstance();
-            sos.initialize(null, this);
-            ValidationResult vr = ((MarketoSourceOrSinkRuntime) sos).validateConnection(this);
-            if (!Result.OK.equals(vr.getStatus())) {
-                throw new IOException(vr.getMessage());
-            }
-            for (Field f : sos.getAllLeadFields()) {
-                allAvailableleadFields.put(f.name(), f);
-            }
+        SandboxedInstance sandboxedInstance = getRuntimeSandboxedInstance();
+        MarketoSourceOrSinkSchemaProvider sos = (MarketoSourceOrSinkSchemaProvider) sandboxedInstance.getInstance();
+        sos.initialize(null, this);
+        ValidationResult vr = ((MarketoSourceOrSinkRuntime) sos).validateConnection(this);
+        if (!Result.OK.equals(vr.getStatus())) {
+            throw new IOException(vr.getMessage());
+        }
+        for (Field f : sos.getAllLeadFields()) {
+            allAvailableleadFields.put(f.name(), f);
         }
         SimpleNamedThing snt;
         // add current fields in schema
@@ -117,6 +115,8 @@ public class MarketoComponentWizardBaseProperties extends MarketoComponentProper
             }
             Schema s = newSchema(getEmptySchema(), "selectedLeadFields", newFields);
             schemaInput.schema.setValue(s);
+            // cleanup allAvailableleadFields
+            allAvailableleadFields.clear();
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
