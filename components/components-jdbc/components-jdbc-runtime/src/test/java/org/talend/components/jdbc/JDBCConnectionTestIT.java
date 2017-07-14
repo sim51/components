@@ -162,9 +162,9 @@ public class JDBCConnectionTestIT {
     public void testEliminateSpaceURL(){
         TJDBCConnectionDefinition definition = new TJDBCConnectionDefinition();
         TJDBCConnectionProperties properties = DBTestUtils.createCommonJDBCConnectionProperties(allSetting, definition);
-        properties.connection.jdbcUrl.setValue("a value with space in it.");
+        properties.connection.jdbcUrl.setValue(" a_value_with_space_around_it. ");
         AllSetting setting = properties.getRuntimeSetting();
-        assertTrue("avaluewithspaceinit.".equals(setting.getJdbcUrl()));
+        assertTrue("a_value_with_space_around_it.".equals(setting.getJdbcUrl()));
     }
 
 }

@@ -88,7 +88,7 @@ public class AllSetting implements Serializable, JDBCAvroRegistryInfluencer {
     private ComponentProperties referencedComponentProperties;
 
     public String getJdbcUrl() {
-        return jdbcUrl.replaceAll(" ", "");
+        return jdbcUrl.trim();
     }
 
     public void setJdbcUrl(String jdbcUrl) {
