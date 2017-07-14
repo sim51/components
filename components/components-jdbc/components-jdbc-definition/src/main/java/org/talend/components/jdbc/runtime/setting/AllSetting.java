@@ -88,11 +88,15 @@ public class AllSetting implements Serializable, JDBCAvroRegistryInfluencer {
     private ComponentProperties referencedComponentProperties;
 
     public String getJdbcUrl() {
-        return jdbcUrl.trim();
+        return jdbcUrl;
     }
 
     public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
+        if (jdbcUrl != null) {
+            this.jdbcUrl = jdbcUrl.trim();
+        }else{
+            this.jdbcUrl = null;
+        }
     }
 
     public List<String> getDriverPaths() {
