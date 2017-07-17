@@ -86,7 +86,8 @@ public class JiraWriter implements Writer<Result> {
      *
      * @param uId Unique ID of this {@link Writer}
      */
-    @Override public void open(String uId) {
+    @Override
+    public void open(String uId) {
         if (opened) {
             LOG.debug("Writer is already opened");
             return;
@@ -105,7 +106,8 @@ public class JiraWriter implements Writer<Result> {
     /**
      * {@inheritDoc}
      */
-    @Override public void write(Object datum) throws IOException {
+    @Override
+    public void write(Object datum) throws IOException {
         // Nothing to be done. Should be overridden in successors
     }
 
@@ -114,7 +116,8 @@ public class JiraWriter implements Writer<Result> {
      *
      * @return {@link Result} with {@link Writer} ID and number of data written
      */
-    @Override public Result close() {
+    @Override
+    public Result close() {
         if (!opened) {
             LOG.debug("Writer closed without opening");
         }
@@ -128,7 +131,8 @@ public class JiraWriter implements Writer<Result> {
     /**
      * {@inheritDoc}
      */
-    @Override public JiraWriteOperation getWriteOperation() {
+    @Override
+    public JiraWriteOperation getWriteOperation() {
         return writeOperation;
     }
 
